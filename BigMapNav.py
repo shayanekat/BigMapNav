@@ -14,13 +14,13 @@ uniquement les allentours du joueur toujours au cente
 #  DONE - implémenter les collisions
 #  DONE - reduire la distance d'affichage 
 # ============== V1 Fini =====================
+#   - exporter de tkinter vers pygame
 #   - ajouter des couleurs
 #   - ajouter l'implementation d'étages
 #   - implémentation de lumiere
 #   - implémentation de dynamique light
 #   - implémentation des ombres
 # ============== V2 Fini =====================
-#   - exporter de tkinter vers pygame
 #   - optimiser le code
 #   - ajouter des IAs (dans un premier temps dans un fichier test pour inclure du pathfinding)
 # ============== V3 Fini =====================
@@ -47,7 +47,7 @@ Map = ["WWWWWWWWWWWWWWWWWWWW",
        "W W WWWWWWWWW    W W",
        "W W           WW W W",
        "W WWWWWWWWWWWWWW W W",
-       "W        p   W   W W",
+       "W        P   W   W W",
        "W WWWWWWWWWW W WWW W",
        "W          W W   W W",
        "W WWWWWWWW W WWWWW W",
@@ -55,7 +55,7 @@ Map = ["WWWWWWWWWWWWWWWWWWWW",
        "W W  WWWWWWW W W W W",
        "W WW W     W W W   W",
        "W  WWW W WWW W WWWWW",
-       "WW     W     W    PS",
+       "WW     W     W     S",
        "WWWWWWWWWWWWWWWWWWWW"]
 
 
