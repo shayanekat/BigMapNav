@@ -30,10 +30,17 @@ uniquement les allentours du joueur toujours au cente
 WindowSize = 500
 BlockSize = 250
 MapSizeBlock = 20
+
+# init
 Walls = []
 PlayerPos = []
 player = ""
 Exit = []
+
+# fonts
+pygame.font.init()
+font = pygame.font.SysFont("Times", 20)
+WinFont = pygame.font.SysFont("Times", 20)
 
 # map design
 Map = ["WWWWWWWWWWWWWWWWWWWW",
@@ -46,7 +53,7 @@ Map = ["WWWWWWWWWWWWWWWWWWWW",
        "W W WWWWWWWWW    W W",
        "W W           WW W W",
        "W WWWWWWWWWWWWWW W W",
-       "W        P   W   W W",
+       "W        p   W   W W",
        "W WWWWWWWWWW W WWW W",
        "W          W W   W W",
        "W WWWWWWWW W WWWWW W",
@@ -54,7 +61,7 @@ Map = ["WWWWWWWWWWWWWWWWWWWW",
        "W W  WWWWWWW W W W W",
        "W WW W     W W W   W",
        "W  WWW W WWW W WWWWW",
-       "WW     W     W     S",
+       "WW     W     W    PS",
        "WWWWWWWWWWWWWWWWWWWW"]
 
 def render(MapToRender):
@@ -81,6 +88,8 @@ def LocalRender(MapToRender):
     """
     Function to Render what should be displayed on the screen
     """
+    screen.fill((0, 0, 0))
+
     pygame.draw.rect(screen, (0, 0, 255), (WindowSize//4, WindowSize//4, BlockSize, BlockSize))
 
     if [PlayerPos[0]-1, PlayerPos[1]-1] in Walls: # Up Left
@@ -116,8 +125,7 @@ def LocalRender(MapToRender):
         # can.create_rectangle(0, WindowSize//4, WindowSize//4, WindowSize//4+BlockSize, fill="White")
 
     text = font.render("[{}, {}]".format(PlayerPos[0], PlayerPos[1]), True, (128,128,128))
-    textRect = text.get_rect()
-    textRect.center = (WindowSize//2, 20) 
+    screen.blit(text, (WindowSize//2, 20)) 
     # can.create_text(WindowSize//2, 18, text="[{}, {}]".format(PlayerPos[0], PlayerPos[1]), fill="#808080")
     
     pygame.display.flip()
@@ -132,10 +140,10 @@ def GoUp():
         PlayerPos[1] -= 1
         LocalRender(Map)
         if PlayerPos == Exit:
-            can.create_text(WindowSize/2, WindowSize/2, text="Congratulation, you found the exit".upper(), font="Times 18 bold", fill="black", width=BlockSize, justify=CENTER)
+            # can.create_text(WindowSize/2, WindowSize/2, text="Congratulation,\n you found the exit".upper(), font="Times 18 bold", fill="black", width=BlockSize, justify=CENTER)
             text = WinFont.render("Congratulation, you found the exit", True, (0, 0, 0))
-            textRect = text.get_rect()
-            textRect.center = (WindowSize//2, WindowSize//2)
+            screen.blit(text, (WindowSize//4, WindowSize//4))
+            pygame.display.flip()
 
 
 def GoDown():
@@ -147,10 +155,10 @@ def GoDown():
         PlayerPos[1] += 1
         LocalRender(Map)
         if PlayerPos == Exit:
-            can.create_text(WindowSize/2, WindowSize/2, text="Congratulation, you found the exit".upper(), font="Times 18 bold", fill="black", width=BlockSize, justify=CENTER)
+            # can.create_text(WindowSize/2, WindowSize/2, text="Congratulation,\n you found the exit".upper(), font="Times 18 bold", fill="black", width=BlockSize, justify=CENTER)
             text = WinFont.render("Congratulation, you found the exit", True, (0, 0, 0))
-            textRect = text.get_rect()
-            textRect.center = (WindowSize//2, WindowSize//2)
+            screen.blit(text, (WindowSize//4, WindowSize//4))
+            pygame.display.flip()
 
 
 def GoLeft():
@@ -162,10 +170,10 @@ def GoLeft():
         PlayerPos[0] -= 1
         LocalRender(Map)
         if PlayerPos == Exit:
-            can.create_text(WindowSize/2, WindowSize/2, text="Congratulation, you found the exit".upper(), font="Times 18 bold", fill="black", width=BlockSize, justify=CENTER)
+            # can.create_text(WindowSize/2, WindowSize/2, text="Congratulation,\n you found the exit".upper(), font="Times 18 bold", fill="black", width=BlockSize, justify=CENTER)
             text = WinFont.render("Congratulation, you found the exit", True, (0, 0, 0))
-            textRect = text.get_rect()
-            textRect.center = (WindowSize//2, WindowSize//2)
+            screen.blit(text, (WindowSize//4, WindowSize//4))
+            pygame.display.flip()
 
 
 def GoRight():
@@ -177,18 +185,17 @@ def GoRight():
         PlayerPos[0] += 1
         LocalRender(Map)
         if PlayerPos == Exit:
-            can.create_text(WindowSize/2, WindowSize/2, text="Congratulation, you found the exit".upper(), font="Times 18 bold", fill="black", width=BlockSize, justify=CENTER)
-            text = WinFont.render("Congratulation, you found the exit", True, (0, 0, 0))
-            textRect = text.get_rect()
-            textRect.center = (WindowSize//2, WindowSize//2)
+            # can.create_text(WindowSize/2, WindowSize/2, text="Congratulation,\n you found the exit".upper(), font="Times 18 bold", fill="black", width=BlockSize, justify=CENTER)
+            text = WinFont.render("Congratulation, you can exit", True, (0, 0, 0))
+            screen.blit(text, (WindowSize//4, WindowSize//4))
+            pygame.display.flip()
 
 # =========================FRONTEND=========================
 # init window
 pygame.init()
 screen = pygame.display.set_mode((WindowSize, WindowSize))
 pygame.display.set_caption("My Game")
-font = pygame.font.Font("freesansbold.ttf", 14)
-WinFont = pygame.font.Font("freesansbold.ttf", 18)
+
 render(Map)
 LocalRender(Map)
 
@@ -201,11 +208,11 @@ while running:
         if event.type == pygame.QUIT: # check for closing window
             running = False
         if event.type == pygame.KEYDOWN: # button pressed on keyboard
-            if event.key == pygame.K_z:
+            if event.key == pygame.K_w:
                 GoUp()
             if event.key == pygame.K_s:
                 GoDown()
-            if event.key == pygame.K_q:
+            if event.key == pygame.K_a:
                 GoLeft()
             if event.key == pygame.K_d:
                 GoRight()
