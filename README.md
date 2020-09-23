@@ -11,3 +11,5 @@ At the end, I want to build a playable maze game including different floors of d
 - 22/09/2020 : Just started the project, set window size to 500x500 px, map size to 20x20 blocks, block size to 250x250 px
 First Floor LeveDesign finished. Collision Blocks and finish message.
 First Version is done
+
+- 23/09/2020 : Starting updating the program from tkinter to pygame. Fully Converted to pygame. no more codeing today, I am busy.
