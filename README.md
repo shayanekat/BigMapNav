@@ -13,3 +13,5 @@ First Floor LeveDesign finished. Collision Blocks and finish message.
 First Version is done
 
 - 23/09/2020 : Starting updating the program from tkinter to pygame. Fully Converted to pygame. no more codeing today, I am busy.
+
+- 24/09/2020 : modifying the player from block to small circle and changing it's movment. Getting Stuck here. I'll continue this project later.
