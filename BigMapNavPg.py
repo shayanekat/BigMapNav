@@ -33,6 +33,7 @@ BlockSize = 250
 MapSizeBlock = 20
 PlayerRadius = 20
 WalkDistance = 20
+PlayerInBlockPos = [BlockSize//2, BlockSize//2]
 
 # init
 Walls = []
@@ -96,28 +97,28 @@ def LocalRender(MapToRender):
     pygame.draw.circle(screen, (0, 0, 255), (WindowSize//2, WindowSize//2), PlayerRadius)
 
     if [int(PlayerPos[0]-1), int(PlayerPos[1]-1)] in Walls: # Up Left
-        pygame.draw.rect(screen, (255, 255, 255), (0, 0, WindowSize//4-int(PlayerPos[0]*BlockSize)%BlockSize, WindowSize//4-int(PlayerPos[1]*BlockSize)%BlockSize)) 
+        pygame.draw.rect(screen, (255, 255, 255), (0, 0, WindowSize//2-PlayerInBlockPos[0], WindowSize//2-PlayerInBlockPos[1])) 
 
     if [int(PlayerPos[0]), int(PlayerPos[1]-1)] in Walls: # Up 
-        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//4-int(PlayerPos[0]*BlockSize)%BlockSize, 0, BlockSize-int(PlayerPos*BlockSize)%BlockSize, WindowSize//4-int(PlayerPos[1]*BlockSize)%BlockSize))
+        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//2-PlayerInBlockPos[0], 0, BlockSize, WindowSize//2-PlayerInBlockPos[1]))
 
     if [int(PlayerPos[0]+1), int(PlayerPos[1]-1)] in Walls: # Up Right
-        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//4+BlockSize, 0, WindowSize//4, WindowSize//4))
+        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//2+(BlockSize-PlayerInBlockPos[0]), 0, WindowSize-(WindowSize//2+(BlockSize-PlayerInBlockPos[0])), WindowSize//2-PlayerInBlockPos[1]))
 
     if [int(PlayerPos[0]+1), int(PlayerPos[1])] in Walls: # Right
-        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//4+BlockSize, WindowSize//4, WindowSize//4, BlockSize))
+        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//2+(BlockSize-PlayerInBlockPos[0]), WindowSize//2-PlayerInBlockPos[1], WindowSize-(WindowSize//2+(BlockSize-PlayerInBlockPos[0])), BlockSize))
 
     if [int(PlayerPos[0]+1), int(PlayerPos[1]+1)] in Walls: # Down Right
-        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//4+BlockSize, WindowSize//4+BlockSize, WindowSize//4, WindowSize//4))
+        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//2+(BlockSize-PlayerInBlockPos[0]), WindowSize//2+(BlockSize-PlayerInBlockPos[1]), WindowSize-(WindowSize//2+(BlockSize-PlayerInBlockPos[0])), WindowSize-(WindowSize//2+(BlockSize-PlayerInBlockPos[1]))))
 
     if [int(PlayerPos[0]), int(PlayerPos[1]+1)] in Walls: # Down
-        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//4, WindowSize//4+BlockSize, BlockSize, WindowSize//4))
+        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//2-PlayerInBlockPos[0], WindowSize//2+(BlockSize-PlayerInBlockPos[1]), BlockSize, WindowSize-(WindowSize//2+(BlockSize-PlayerInBlockPos[1]))))
 
     if [int(PlayerPos[0]-1), int(PlayerPos[1]+1)] in Walls: # Down Left
-        pygame.draw.rect(screen, (255, 255, 255), (0, WindowSize//4+BlockSize, WindowSize//4, WindowSize//4))
+        pygame.draw.rect(screen, (255, 255, 255), (0, WindowSize//2+(BlockSize-PlayerInBlockPos[1]), WindowSize//2-PlayerInBlockPos[0], WindowSize-(WindowSize//2+(BlockSize-PlayerInBlockPos[1]))))
 
     if [int(PlayerPos[0]-1), int(PlayerPos[1])] in Walls: # Left
-        pygame.draw.rect(screen, (255, 255, 255), (0, WindowSize//4, WindowSize//4, BlockSize))
+        pygame.draw.rect(screen, (255, 255, 255), (0, WindowSize//2-PlayerInBlockPos[1], WindowSize//2-PlayerInBlockPos[0], BlockSize))
 
     text = font.render("[{}, {}]".format(int(PlayerPos[0]), int(PlayerPos[1])), True, (128,128,128))
     screen.blit(text, (WindowSize//2, 20)) 
@@ -132,10 +133,11 @@ def GoUp():
     global player, txt, Exit
     if ([PlayerPos[0], int(PlayerPos[1] - (WalkDistance/BlockSize))]) not in Walls :
         PlayerPos[1] -= (WalkDistance/BlockSize)
+        
+        PlayerInBlockPos[1] -= WalkDistance
         LocalRender(Map)
         if PlayerPos == Exit:
-            upper(), font="Times 18 bold", fill="black", width=BlockSize, justify=CENTER)
-            text = WinFont.render("Congratulation, you found the exit", True, (0, 0, 0))
+            text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
             screen.blit(text, (WindowSize//4, WindowSize//4))
             pygame.display.flip()
 
@@ -147,10 +149,10 @@ def GoDown():
     global player, txt, Exit
     if ([PlayerPos[0], int(PlayerPos[1] + (WalkDistance/BlockSize))]) not in Walls :
         PlayerPos[1] += (WalkDistance/BlockSize)
+        PlayerInBlockPos[1] += WalkDistance
         LocalRender(Map)
         if PlayerPos == Exit:
-            upper(), font="Times 18 bold", fill="black", width=BlockSize, justify=CENTER)
-            text = WinFont.render("Congratulation, you found the exit", True, (0, 0, 0))
+            text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
             screen.blit(text, (WindowSize//4, WindowSize//4))
             pygame.display.flip()
 
@@ -162,10 +164,10 @@ def GoLeft():
     global player, txt, Exit
     if ([int(PlayerPos[0] - (WalkDistance/BlockSize)), PlayerPos[1]]) not in Walls :
         PlayerPos[0] -= (WalkDistance/BlockSize)
+        PlayerInBlockPos[0] -= WalkDistance
         LocalRender(Map)
         if PlayerPos == Exit:
-            upper(), font="Times 18 bold", fill="black", width=BlockSize, justify=CENTER)
-            text = WinFont.render("Congratulation, you found the exit", True, (0, 0, 0))
+            text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
             screen.blit(text, (WindowSize//4, WindowSize//4))
             pygame.display.flip()
 
@@ -177,10 +179,10 @@ def GoRight():
     global player, txt, Exit
     if ([int(PlayerPos[0] + (WalkDistance/BlockSize)), PlayerPos[1]]) not in Walls :
         PlayerPos[0] += (WalkDistance/BlockSize)
+        PlayerInBlockPos[0] += WalkDistance
         LocalRender(Map)
         if PlayerPos == Exit:
-            upper(), font="Times 18 bold", fill="black", width=BlockSize, justify=CENTER)
-            text = WinFont.render("Congratulation, you can exit", True, (0, 0, 0))
+            text = WinFont.render("Congratulation, you can exit", True.upper(), (0, 0, 0))
             screen.blit(text, (WindowSize//4, WindowSize//4))
             pygame.display.flip()
 

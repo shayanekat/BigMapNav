@@ -15,3 +15,5 @@ First Version is done
 - 23/09/2020 : Starting updating the program from tkinter to pygame. Fully Converted to pygame. no more codeing today, I am busy.
 
 - 24/09/2020 : modifying the player from block to small circle and changing it's movment. Getting Stuck here. I'll continue this project later.
+
+- 28/09/2020 : Tryig to fix Screen Rendering problems, without success, I will try again in a few days
