@@ -18,4 +18,5 @@ First Version is done
 
 - 28/09/2020 : Tryig to fix Screen Rendering problems, without success, I will try again in a few days
 
-- 01/10/2020 : Fixed LocalRender Function. Still working on coordinate system
+- 01/10/2020 : Fixed LocalRender Function. Still working on coordinate system. Fially fixed coordinate system. Now fixing
+the collisions 

@@ -139,7 +139,9 @@ def LocalRender(MapToRender):
         pygame.draw.rect(screen, (255, 255, 255), (0, yUL, xUL, BlockSize))
 
     text = font.render("[{}, {}]".format(int(PlayerPos[0]), int(PlayerPos[1])), True, (128,128,128))
+    text2 = font.render("[{}, {}]".format(int(PlayerInBlockPos[0]), int(PlayerInBlockPos[1])), True, (128,128,128))
     screen.blit(text, (WindowSize//2, 20)) 
+    screen.blit(text2, (WindowSize//2, 40))
     
     pygame.display.flip()
 
@@ -149,12 +151,17 @@ def GoUp():
     Thread run when Z button is pressed to go up in the maze
     """
     global player, txt, Exit
-    if ([PlayerPos[0], int(PlayerPos[1] - (WalkDistance/BlockSize))]) not in Walls :
-        PlayerPos[1] -= (WalkDistance/BlockSize)
-        
+    print("this thread is runned")
+    if ([PlayerPos[0], int(PlayerPos[1] - (WalkDistance/BlockSize)) + 1]) not in Walls :
+        print("the first condition has no problem")
         PlayerInBlockPos[1] -= WalkDistance
+        if PlayerInBlockPos[1] < 0:
+            print("the second condition has no problem")
+            PlayerPos[1] -= 1
+            PlayerInBlockPos[1] += BlockSize
         LocalRender(Map)
         if PlayerPos == Exit:
+            print("the third condition has no problem")
             text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
             screen.blit(text, (WindowSize//4, WindowSize//4))
             pygame.display.flip()
@@ -166,8 +173,10 @@ def GoDown():
     """
     global player, txt, Exit
     if ([PlayerPos[0], int(PlayerPos[1] + (WalkDistance/BlockSize))]) not in Walls :
-        PlayerPos[1] += (WalkDistance/BlockSize)
         PlayerInBlockPos[1] += WalkDistance
+        if PlayerInBlockPos[1] > BlockSize:
+            PlayerPos[1] += 1
+            PlayerInBlockPos[1] -= BlockSize
         LocalRender(Map)
         if PlayerPos == Exit:
             text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
@@ -181,8 +190,10 @@ def GoLeft():
     """
     global player, txt, Exit
     if ([int(PlayerPos[0] - (WalkDistance/BlockSize)), PlayerPos[1]]) not in Walls :
-        PlayerPos[0] -= (WalkDistance/BlockSize)
         PlayerInBlockPos[0] -= WalkDistance
+        if PlayerInBlockPos[0] < 0:
+            PlayerPos[0] -= 1
+            PlayerInBlockPos[0] += BlockSize
         LocalRender(Map)
         if PlayerPos == Exit:
             text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
@@ -196,8 +207,10 @@ def GoRight():
     """
     global player, txt, Exit
     if ([int(PlayerPos[0] + (WalkDistance/BlockSize)), PlayerPos[1]]) not in Walls :
-        PlayerPos[0] += (WalkDistance/BlockSize)
         PlayerInBlockPos[0] += WalkDistance
+        if PlayerInBlockPos[0] > BlockSize:
+            PlayerPos[0] += 1
+            PlayerInBlockPos[0] -= BlockSize
         LocalRender(Map)
         if PlayerPos == Exit:
             text = WinFont.render("Congratulation, you can exit", True.upper(), (0, 0, 0))
