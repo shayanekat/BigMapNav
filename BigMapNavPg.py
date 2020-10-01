@@ -57,7 +57,7 @@ Map = ["WWWWWWWWWWWWWWWWWWWW",
        "W W WWWWWWWWW    W W",
        "W W           WW W W",
        "W WWWWWWWWWWWWWW W W",
-       "W        p   W   W W",
+       "W        p P W   W W",
        "W WWWWWWWWWW W WWW W",
        "W          W W   W W",
        "W WWWWWWWW W WWWWW W",
@@ -65,7 +65,7 @@ Map = ["WWWWWWWWWWWWWWWWWWWW",
        "W W  WWWWWWW W W W W",
        "W WW W     W W W   W",
        "W  WWW W WWW W WWWWW",
-       "WW     W     W    PS",
+       "WW     W     W     S",
        "WWWWWWWWWWWWWWWWWWWW"]
 
 def render(MapToRender):
@@ -96,29 +96,47 @@ def LocalRender(MapToRender):
 
     pygame.draw.circle(screen, (0, 0, 255), (WindowSize//2, WindowSize//2), PlayerRadius)
 
+    # main needed informations
+    # inblock coordinates of player
+    x = PlayerInBlockPos[0]
+    y = PlayerInBlockPos[1]
+
+    #width and height of UpLeft block
+    xUL = WindowSize//2 - x 
+    yUL = WindowSize//2 - y
+
+    # right blocks and down blocks coordinates
+    xU = WindowSize//2 + (BlockSize-x)
+    yL = WindowSize//2 + (BlockSize-y)
+
+    # right blocks and down blocks width and height
+    WUR = BlockSize-xUL
+    HDL = BlockSize-yUL
+
+    # Render
     if [int(PlayerPos[0]-1), int(PlayerPos[1]-1)] in Walls: # Up Left
-        pygame.draw.rect(screen, (255, 255, 255), (0, 0, WindowSize//2-PlayerInBlockPos[0], WindowSize//2-PlayerInBlockPos[1])) 
+        pygame.draw.rect(screen, (255, 255, 255), (0, 0, xUL, yUL)) 
 
     if [int(PlayerPos[0]), int(PlayerPos[1]-1)] in Walls: # Up 
-        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//2-PlayerInBlockPos[0], 0, BlockSize, WindowSize//2-PlayerInBlockPos[1]))
+        pygame.draw.rect(screen, (255, 255, 255), (xUL, 0, BlockSize, yUL))
 
     if [int(PlayerPos[0]+1), int(PlayerPos[1]-1)] in Walls: # Up Right
-        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//2+(BlockSize-PlayerInBlockPos[0]), 0, WindowSize-(WindowSize//2+(BlockSize-PlayerInBlockPos[0])), WindowSize//2-PlayerInBlockPos[1]))
+        pygame.draw.rect(screen, (255, 255, 255), (xU, 0, WUR, yUL))
 
     if [int(PlayerPos[0]+1), int(PlayerPos[1])] in Walls: # Right
-        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//2+(BlockSize-PlayerInBlockPos[0]), WindowSize//2-PlayerInBlockPos[1], WindowSize-(WindowSize//2+(BlockSize-PlayerInBlockPos[0])), BlockSize))
+        pygame.draw.rect(screen, (255, 255, 255), (xU, yUL, WUR, BlockSize))
 
     if [int(PlayerPos[0]+1), int(PlayerPos[1]+1)] in Walls: # Down Right
-        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//2+(BlockSize-PlayerInBlockPos[0]), WindowSize//2+(BlockSize-PlayerInBlockPos[1]), WindowSize-(WindowSize//2+(BlockSize-PlayerInBlockPos[0])), WindowSize-(WindowSize//2+(BlockSize-PlayerInBlockPos[1]))))
+        pygame.draw.rect(screen, (255, 255, 255), (xU, yL, WUR, HDL))
 
     if [int(PlayerPos[0]), int(PlayerPos[1]+1)] in Walls: # Down
-        pygame.draw.rect(screen, (255, 255, 255), (WindowSize//2-PlayerInBlockPos[0], WindowSize//2+(BlockSize-PlayerInBlockPos[1]), BlockSize, WindowSize-(WindowSize//2+(BlockSize-PlayerInBlockPos[1]))))
+        pygame.draw.rect(screen, (255, 255, 255), (xUL, yL, BlockSize, HDL))
 
     if [int(PlayerPos[0]-1), int(PlayerPos[1]+1)] in Walls: # Down Left
-        pygame.draw.rect(screen, (255, 255, 255), (0, WindowSize//2+(BlockSize-PlayerInBlockPos[1]), WindowSize//2-PlayerInBlockPos[0], WindowSize-(WindowSize//2+(BlockSize-PlayerInBlockPos[1]))))
+        pygame.draw.rect(screen, (255, 255, 255), (0, yL, xUL, HDL))
 
     if [int(PlayerPos[0]-1), int(PlayerPos[1])] in Walls: # Left
-        pygame.draw.rect(screen, (255, 255, 255), (0, WindowSize//2-PlayerInBlockPos[1], WindowSize//2-PlayerInBlockPos[0], BlockSize))
+        pygame.draw.rect(screen, (255, 255, 255), (0, yUL, xUL, BlockSize))
 
     text = font.render("[{}, {}]".format(int(PlayerPos[0]), int(PlayerPos[1])), True, (128,128,128))
     screen.blit(text, (WindowSize//2, 20)) 

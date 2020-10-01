@@ -17,3 +17,5 @@ First Version is done
 - 24/09/2020 : modifying the player from block to small circle and changing it's movment. Getting Stuck here. I'll continue this project later.
 
 - 28/09/2020 : Tryig to fix Screen Rendering problems, without success, I will try again in a few days
+
+- 01/10/2020 : Fixed LocalRender Function. Still working on coordinate system
