@@ -31,9 +31,10 @@ uniquement les allentours du joueur toujours au cente
 WindowSize = 500
 BlockSize = 250
 MapSizeBlock = 20
-PlayerRadius = 20
-WalkDistance = 20
+PlayerRadius = 25
+WalkDistance = 25
 PlayerInBlockPos = [BlockSize//2, BlockSize//2]
+n = 0
 
 # init
 Walls = []
@@ -150,18 +151,18 @@ def GoUp():
     """
     Thread run when Z button is pressed to go up in the maze
     """
-    global player, txt, Exit
-    print("this thread is runned")
-    if ([PlayerPos[0], int(PlayerPos[1] - (WalkDistance/BlockSize)) + 1]) not in Walls :
-        print("the first condition has no problem")
+    global player, txt, Exit, n
+    n += 1
+    if (([PlayerPos[0], int(PlayerPos[1] - (WalkDistance/BlockSize))]) not in Walls) or (PlayerInBlockPos[1] - WalkDistance >= PlayerRadius) :
+
         PlayerInBlockPos[1] -= WalkDistance
         if PlayerInBlockPos[1] < 0:
-            print("the second condition has no problem")
             PlayerPos[1] -= 1
             PlayerInBlockPos[1] += BlockSize
+
         LocalRender(Map)
+
         if PlayerPos == Exit:
-            print("the third condition has no problem")
             text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
             screen.blit(text, (WindowSize//4, WindowSize//4))
             pygame.display.flip()
@@ -172,12 +173,15 @@ def GoDown():
     Thread run when s button is pressed to go down in the maze
     """
     global player, txt, Exit
-    if ([PlayerPos[0], int(PlayerPos[1] + (WalkDistance/BlockSize))]) not in Walls :
+    if (([PlayerPos[0], int(PlayerPos[1] + (WalkDistance/BlockSize) + 1)]) not in Walls) or (PlayerInBlockPos[1] + WalkDistance <= BlockSize-PlayerRadius) :
+        
         PlayerInBlockPos[1] += WalkDistance
         if PlayerInBlockPos[1] > BlockSize:
             PlayerPos[1] += 1
             PlayerInBlockPos[1] -= BlockSize
+        
         LocalRender(Map)
+        
         if PlayerPos == Exit:
             text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
             screen.blit(text, (WindowSize//4, WindowSize//4))
@@ -189,12 +193,15 @@ def GoLeft():
     Thread run when q button is pressed to go left in the maze
     """
     global player, txt, Exit
-    if ([int(PlayerPos[0] - (WalkDistance/BlockSize)), PlayerPos[1]]) not in Walls :
+    if (([int(PlayerPos[0] - (WalkDistance/BlockSize)), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] - WalkDistance >= PlayerRadius) :
+        
         PlayerInBlockPos[0] -= WalkDistance
         if PlayerInBlockPos[0] < 0:
             PlayerPos[0] -= 1
             PlayerInBlockPos[0] += BlockSize
+        
         LocalRender(Map)
+        
         if PlayerPos == Exit:
             text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
             screen.blit(text, (WindowSize//4, WindowSize//4))
@@ -206,12 +213,15 @@ def GoRight():
     Thread run when d button is pressed to right down in the maze
     """
     global player, txt, Exit
-    if ([int(PlayerPos[0] + (WalkDistance/BlockSize)), PlayerPos[1]]) not in Walls :
+    if (([int(PlayerPos[0] + (WalkDistance/BlockSize) + 1), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] + WalkDistance <= BlockSize-PlayerRadius) :
+        
         PlayerInBlockPos[0] += WalkDistance
         if PlayerInBlockPos[0] > BlockSize:
             PlayerPos[0] += 1
             PlayerInBlockPos[0] -= BlockSize
+        
         LocalRender(Map)
+        
         if PlayerPos == Exit:
             text = WinFont.render("Congratulation, you can exit", True.upper(), (0, 0, 0))
             screen.blit(text, (WindowSize//4, WindowSize//4))
