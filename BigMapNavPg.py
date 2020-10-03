@@ -31,10 +31,14 @@ uniquement les allentours du joueur toujours au cente
 WindowSize = 500
 BlockSize = 250
 MapSizeBlock = 20
-PlayerRadius = 25
 WalkDistance = 25
 PlayerInBlockPos = [BlockSize//2, BlockSize//2]
 n = 0
+WalkCount = 0
+left = False
+right = False
+PlayerWidth = 32
+PlayerHeight = 48
 
 # init
 Walls = []
@@ -69,6 +73,12 @@ Map = ["WWWWWWWWWWWWWWWWWWWW",
        "WW     W     W     S",
        "WWWWWWWWWWWWWWWWWWWW"]
 
+# images
+walkRight = [pygame.image.load('Images\\R1.png'), pygame.image.load('Images\\R2.png'), pygame.image.load('Images\\R3.png'), pygame.image.load('Images\\R4.png'), pygame.image.load('Images\\R5.png'), pygame.image.load('Images\\R6.png'), pygame.image.load('Images\\R7.png'), pygame.image.load('Images\\R8.png'), pygame.image.load('Images\\R9.png')]
+walkLeft = [pygame.image.load('Images\\L1.png'), pygame.image.load('Images\\L2.png'), pygame.image.load('Images\\L3.png'), pygame.image.load('Images\\L4.png'), pygame.image.load('Images\\L5.png'), pygame.image.load('Images\\L6.png'), pygame.image.load('Images\\L7.png'), pygame.image.load('Images\\L8.png'), pygame.image.load('Images\\L9.png')]
+char = pygame.image.load('Images\\standing.png')
+
+
 def render(MapToRender):
     """
     Render function
@@ -93,9 +103,20 @@ def LocalRender(MapToRender):
     """
     Function to Render what should be displayed on the screen
     """
+    global WalkCount
     screen.fill((0, 0, 0))
 
-    pygame.draw.circle(screen, (0, 0, 255), (WindowSize//2, WindowSize//2), PlayerRadius)
+    # Sprite display
+    if WalkCount + 1 >= 27:
+        WalkCount = 0
+    if left:
+        screen.blit(walkLeft[WalkCount//3], (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
+        WalkCount += 1
+    elif right:
+        screen.blit(walkRight[WalkCount//3], (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
+        WalkCount +=1
+    else:
+        screen.blit(char, (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
 
     # main needed informations
     # inblock coordinates of player
@@ -151,10 +172,11 @@ def GoUp():
     """
     Thread run when Z button is pressed to go up in the maze
     """
-    global player, txt, Exit, n
-    n += 1
-    if (([PlayerPos[0], int(PlayerPos[1] - (WalkDistance/BlockSize))]) not in Walls) or (PlayerInBlockPos[1] - WalkDistance >= PlayerRadius) :
-
+    global player, txt, Exit, n, right, left, WalkCount
+    if (([PlayerPos[0], int(PlayerPos[1] - (WalkDistance/BlockSize))]) not in Walls) or (PlayerInBlockPos[1] - WalkDistance >= PlayerHeight//2) :
+        WalkCount += 1
+        right = True
+        left = False
         PlayerInBlockPos[1] -= WalkDistance
         if PlayerInBlockPos[1] < 0:
             PlayerPos[1] -= 1
@@ -172,9 +194,11 @@ def GoDown():
     """
     Thread run when s button is pressed to go down in the maze
     """
-    global player, txt, Exit
-    if (([PlayerPos[0], int(PlayerPos[1] + (WalkDistance/BlockSize) + 1)]) not in Walls) or (PlayerInBlockPos[1] + WalkDistance <= BlockSize-PlayerRadius) :
-        
+    global player, txt, Exit, right, left, WalkCount
+    if (([PlayerPos[0], int(PlayerPos[1] + (WalkDistance/BlockSize) + 1)]) not in Walls) or (PlayerInBlockPos[1] + WalkDistance <= BlockSize-PlayerHeight//2) :
+        WalkCount += 1
+        left = True
+        right = False
         PlayerInBlockPos[1] += WalkDistance
         if PlayerInBlockPos[1] > BlockSize:
             PlayerPos[1] += 1
@@ -192,9 +216,11 @@ def GoLeft():
     """
     Thread run when q button is pressed to go left in the maze
     """
-    global player, txt, Exit
-    if (([int(PlayerPos[0] - (WalkDistance/BlockSize)), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] - WalkDistance >= PlayerRadius) :
-        
+    global player, txt, Exit, WalkCount, left, right
+    if (([int(PlayerPos[0] - (WalkDistance/BlockSize)), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] - WalkDistance >= PlayerWidth) :
+        WalkCount += 1
+        left = True
+        right = False
         PlayerInBlockPos[0] -= WalkDistance
         if PlayerInBlockPos[0] < 0:
             PlayerPos[0] -= 1
@@ -212,9 +238,11 @@ def GoRight():
     """
     Thread run when d button is pressed to right down in the maze
     """
-    global player, txt, Exit
-    if (([int(PlayerPos[0] + (WalkDistance/BlockSize) + 1), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] + WalkDistance <= BlockSize-PlayerRadius) :
-        
+    global player, txt, Exit, WalkCount, right, left
+    if (([int(PlayerPos[0] + (WalkDistance/BlockSize) + 1), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] + WalkDistance <= BlockSize-PlayerWidth) :
+        WalkCount += 1
+        right = True
+        left = False
         PlayerInBlockPos[0] += WalkDistance
         if PlayerInBlockPos[0] > BlockSize:
             PlayerPos[0] += 1
@@ -223,7 +251,7 @@ def GoRight():
         LocalRender(Map)
         
         if PlayerPos == Exit:
-            text = WinFont.render("Congratulation, you can exit", True.upper(), (0, 0, 0))
+            text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
             screen.blit(text, (WindowSize//4, WindowSize//4))
             pygame.display.flip()
 

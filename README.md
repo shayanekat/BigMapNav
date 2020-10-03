@@ -22,3 +22,5 @@ First Version is done
 the collisions 
 
 - 02/10/2020 : Fixed Collisions. Next step is adding textures
+
+- 03/08/2020 : Succefully added player's sprite.
