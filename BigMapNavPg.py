@@ -39,6 +39,7 @@ left = False
 right = False
 PlayerWidth = 32
 PlayerHeight = 48
+clock = pygame.time.Clock()
 
 # init
 Walls = []
@@ -77,6 +78,8 @@ Map = ["WWWWWWWWWWWWWWWWWWWW",
 walkRight = [pygame.image.load('Images\\R1.png'), pygame.image.load('Images\\R2.png'), pygame.image.load('Images\\R3.png'), pygame.image.load('Images\\R4.png'), pygame.image.load('Images\\R5.png'), pygame.image.load('Images\\R6.png'), pygame.image.load('Images\\R7.png'), pygame.image.load('Images\\R8.png'), pygame.image.load('Images\\R9.png')]
 walkLeft = [pygame.image.load('Images\\L1.png'), pygame.image.load('Images\\L2.png'), pygame.image.load('Images\\L3.png'), pygame.image.load('Images\\L4.png'), pygame.image.load('Images\\L5.png'), pygame.image.load('Images\\L6.png'), pygame.image.load('Images\\L7.png'), pygame.image.load('Images\\L8.png'), pygame.image.load('Images\\L9.png')]
 char = pygame.image.load('Images\\standing.png')
+wall = pygame.image.load('Images\\bricks.png')
+background = pygame.image.load('Images\\bg.png')
 
 
 def render(MapToRender):
@@ -104,20 +107,6 @@ def LocalRender(MapToRender):
     Function to Render what should be displayed on the screen
     """
     global WalkCount
-    screen.fill((0, 0, 0))
-
-    # Sprite display
-    if WalkCount + 1 >= 27:
-        WalkCount = 0
-    if left:
-        screen.blit(walkLeft[WalkCount//3], (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
-        WalkCount += 1
-    elif right:
-        screen.blit(walkRight[WalkCount//3], (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
-        WalkCount +=1
-    else:
-        screen.blit(char, (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
-
     # main needed informations
     # inblock coordinates of player
     x = PlayerInBlockPos[0]
@@ -137,31 +126,64 @@ def LocalRender(MapToRender):
 
     # Render
     if [int(PlayerPos[0]-1), int(PlayerPos[1]-1)] in Walls: # Up Left
-        pygame.draw.rect(screen, (255, 255, 255), (0, 0, xUL, yUL)) 
+        screen.blit(wall, (xUL-BlockSize, yUL-BlockSize))
+    else:
+        screen.blit(background, (xUL-BlockSize, yUL-BlockSize))
 
     if [int(PlayerPos[0]), int(PlayerPos[1]-1)] in Walls: # Up 
-        pygame.draw.rect(screen, (255, 255, 255), (xUL, 0, BlockSize, yUL))
+        screen.blit(wall, (xUL, yUL-BlockSize))
+    else:
+        screen.blit(background, (xUL, yUL-BlockSize))
 
     if [int(PlayerPos[0]+1), int(PlayerPos[1]-1)] in Walls: # Up Right
-        pygame.draw.rect(screen, (255, 255, 255), (xU, 0, WUR, yUL))
+        screen.blit(wall, (xUL+BlockSize, yUL-BlockSize))
+    else:
+        screen.blit(background, (xUL+BlockSize, yUL-BlockSize))
 
     if [int(PlayerPos[0]+1), int(PlayerPos[1])] in Walls: # Right
-        pygame.draw.rect(screen, (255, 255, 255), (xU, yUL, WUR, BlockSize))
+        screen.blit(wall, (xUL+BlockSize, yUL))
+    else:
+        screen.blit(background, (xUL+BlockSize, yUL))
 
     if [int(PlayerPos[0]+1), int(PlayerPos[1]+1)] in Walls: # Down Right
-        pygame.draw.rect(screen, (255, 255, 255), (xU, yL, WUR, HDL))
+        screen.blit(wall, (xUL+BlockSize, yUL+BlockSize))
+    else:
+        screen.blit(background, (xUL+BlockSize, yUL+BlockSize))
 
-    if [int(PlayerPos[0]), int(PlayerPos[1]+1)] in Walls: # Down
-        pygame.draw.rect(screen, (255, 255, 255), (xUL, yL, BlockSize, HDL))
+    if [int(PlayerPos[0]), int(PlayerPos[1]+1)] in Walls: # Downd
+        screen.blit(wall, (xUL, yUL+BlockSize))
+    else:
+        screen.blit(background, (xUL, yUL+BlockSize))
 
     if [int(PlayerPos[0]-1), int(PlayerPos[1]+1)] in Walls: # Down Left
-        pygame.draw.rect(screen, (255, 255, 255), (0, yL, xUL, HDL))
+        screen.blit(wall, (xUL-BlockSize, yUL+BlockSize))
+    else:
+        screen.blit(background, (xUL-BlockSize, yUL+BlockSize))
 
     if [int(PlayerPos[0]-1), int(PlayerPos[1])] in Walls: # Left
-        pygame.draw.rect(screen, (255, 255, 255), (0, yUL, xUL, BlockSize))
+        screen.blit(wall, (xUL-BlockSize, yUL))
+    else:
+        screen.blit(background, (xUL-BlockSize, yUL))
 
-    text = font.render("[{}, {}]".format(int(PlayerPos[0]), int(PlayerPos[1])), True, (128,128,128))
-    text2 = font.render("[{}, {}]".format(int(PlayerInBlockPos[0]), int(PlayerInBlockPos[1])), True, (128,128,128))
+    # middle background
+    screen.blit(background, (xUL, yUL))
+
+    # Sprite display
+    if WalkCount + 1 >= 27:
+        WalkCount = 0
+    if left:
+        screen.blit(walkLeft[WalkCount//3], (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
+        WalkCount += 1
+    elif right:
+        screen.blit(walkRight[WalkCount//3], (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
+        WalkCount +=1
+    else:
+        screen.blit(char, (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
+
+
+    text = font.render("[{}, {}]".format(int(PlayerPos[0]), int(PlayerPos[1])), True, (0, 0, 0))
+    text2 = font.render("[{}, {}]".format(int(PlayerInBlockPos[0]), int(PlayerInBlockPos[1])), True, (0, 0, 0))
+    text3 = font.render("FPS : {}".format(int(clock.get_fps())), True, (0, 0, 0))
     screen.blit(text, (WindowSize//2, 20)) 
     screen.blit(text2, (WindowSize//2, 40))
     
@@ -272,12 +294,20 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: # check for closing window
             running = False
-        if event.type == pygame.KEYDOWN: # button pressed on keyboard
-            if event.key == pygame.K_w:
-                GoUp()
-            if event.key == pygame.K_s:
-                GoDown()
-            if event.key == pygame.K_a:
-                GoLeft()
-            if event.key == pygame.K_d:
-                GoRight()
+    
+    keys = pygame.key.get_pressed()
+
+    if keys[pygame.K_w]:
+        GoUp()
+    elif keys[pygame.K_s]:
+        GoDown()
+    elif keys[pygame.K_a]:
+        GoLeft()
+    elif keys[pygame.K_d]:
+        GoRight()
+
+    # FPS update display
+    text3 = font.render("FPS : "+str(int(clock.get_fps())), True, (0, 0, 0))
+    screen.blit(text3, (10, 10))
+    clock.tick(60)
+    pygame.display.flip()

@@ -23,4 +23,4 @@ the collisions
 
 - 02/10/2020 : Fixed Collisions. Next step is adding textures
 
-- 03/08/2020 : Succefully added player's sprite.
+- 03/08/2020 : Succefully added player's sprites walls texture and background texture. also added framerate display
