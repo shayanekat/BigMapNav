@@ -23,4 +23,7 @@ the collisions
 
 - 02/10/2020 : Fixed Collisions. Next step is adding textures
 
-- 03/08/2020 : Succefully added player's sprites walls texture and background texture. also added framerate display
+- 03/08/2020 : Succefully added player's sprites walls texture and background texture. Also added framerate display
+
+- 04/08/2020 : added new python file for level design. Set different levels as floors and exit points as stairs.
+Also cleared the code to be more readable.

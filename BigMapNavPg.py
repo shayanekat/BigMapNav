@@ -15,9 +15,9 @@ uniquement les allentours du joueur toujours au cente
 #  DONE - reduire la distance d'affichage 
 # ============== V1 Fini =====================
 #  DONE - exporter de tkinter vers pygame
-#   - changer le joueur de bloc à petit cercle
-#   - ajouter des couleurs
-#   - ajouter l'implementation d'étages
+#  DONE - changer le joueur de bloc à petit cercle
+#  DONE - ajouter des couleurs
+#  DONE - ajouter l'implementation d'étages
 #   - implémentation de lumiere
 #   - implémentation de dynamique light
 #   - implémentation des ombres
@@ -40,20 +40,25 @@ right = False
 PlayerWidth = 32
 PlayerHeight = 48
 clock = pygame.time.Clock()
+lvl = 0
+
 
 # init
 Walls = []
 PlayerPos = []
 player = ""
 Exit = []
+Levels = []
+
 
 # fonts
 pygame.font.init()
 font = pygame.font.SysFont("Times", 20)
 WinFont = pygame.font.SysFont("Times", 20)
 
+
 # map design
-Map = ["WWWWWWWWWWWWWWWWWWWW",
+rdc = ["WWWWWWWWWWWWWWWWWWWW",
        "W   W              W",
        "W W W WWWWWWWWWWWW W",
        "W W W W            W",
@@ -63,7 +68,7 @@ Map = ["WWWWWWWWWWWWWWWWWWWW",
        "W W WWWWWWWWW    W W",
        "W W           WW W W",
        "W WWWWWWWWWWWWWW W W",
-       "W        p P W   W W",
+       "W        p   W   W W",
        "W WWWWWWWWWW W WWW W",
        "W          W W   W W",
        "W WWWWWWWW W WWWWW W",
@@ -71,15 +76,41 @@ Map = ["WWWWWWWWWWWWWWWWWWWW",
        "W W  WWWWWWW W W W W",
        "W WW W     W W W   W",
        "W  WWW W WWW W WWWWW",
-       "WW     W     W     S",
+       "WW     W     W P   S",
        "WWWWWWWWWWWWWWWWWWWW"]
+Levels.append(rdc)
+
+Floor1 = ["WWWWWWWWWWWWWWWWWWWW",
+          "WSW                W",
+          "W WWWWWWWWWWWWWWWW W",
+          "W        W         W",
+          "W WWWWWW W WWWWWWWWW",
+          "W W      W         W",
+          "W WWWWWWWWWWWWWWWW W",
+          "W                W W",
+          "W WWWWWWWWWWWWWW W W",
+          "W W   W   W      W W",
+          "WWW W   W   WWWWWW W",
+          "W W WWWWWWW W   W  W",
+          "W W W       W W W WW",
+          "W W W WWWWWWW W W  W",
+          "W W W         W  W W",
+          "W W WWWWWWWWWWWW W W",
+          "W W            W   W",
+          "W WWWWWWWWWWWWWWWW W",
+          "W                 PW",
+          "WWWWWWWWWWWWWWWWWWWW"]
+Levels.append(Floor1)
+
 
 # images
 walkRight = [pygame.image.load('Images\\R1.png'), pygame.image.load('Images\\R2.png'), pygame.image.load('Images\\R3.png'), pygame.image.load('Images\\R4.png'), pygame.image.load('Images\\R5.png'), pygame.image.load('Images\\R6.png'), pygame.image.load('Images\\R7.png'), pygame.image.load('Images\\R8.png'), pygame.image.load('Images\\R9.png')]
 walkLeft = [pygame.image.load('Images\\L1.png'), pygame.image.load('Images\\L2.png'), pygame.image.load('Images\\L3.png'), pygame.image.load('Images\\L4.png'), pygame.image.load('Images\\L5.png'), pygame.image.load('Images\\L6.png'), pygame.image.load('Images\\L7.png'), pygame.image.load('Images\\L8.png'), pygame.image.load('Images\\L9.png')]
 char = pygame.image.load('Images\\standing.png')
+
 wall = pygame.image.load('Images\\bricks.png')
 background = pygame.image.load('Images\\bg.png')
+stair = pygame.image.load('Images\\stairs.png')
 
 
 def render(MapToRender):
@@ -87,8 +118,12 @@ def render(MapToRender):
     Render function
     Render the level design
     """
-    global PlayerPos, player, txt, Exit
+    global PlayerPos, player, txt, Exit, Walls
 
+    # reset
+    Walls = [] 
+
+    # get init data
     for i in range(MapSizeBlock):
         for j in range(MapSizeBlock):
 
@@ -124,44 +159,68 @@ def LocalRender(MapToRender):
     WUR = BlockSize-xUL
     HDL = BlockSize-yUL
 
-    # Render
-    if [int(PlayerPos[0]-1), int(PlayerPos[1]-1)] in Walls: # Up Left
+    # Textures Rendering
+    # upleft
+    if [int(PlayerPos[0]-1), int(PlayerPos[1]-1)] in Walls:
         screen.blit(wall, (xUL-BlockSize, yUL-BlockSize))
+    elif [int(PlayerPos[0]-1), int(PlayerPos[1]-1)] == Exit:
+        screen.blit(stair, (xUL-BlockSize, yUL-BlockSize))
     else:
         screen.blit(background, (xUL-BlockSize, yUL-BlockSize))
 
-    if [int(PlayerPos[0]), int(PlayerPos[1]-1)] in Walls: # Up 
+    # up
+    if [int(PlayerPos[0]), int(PlayerPos[1]-1)] in Walls:
         screen.blit(wall, (xUL, yUL-BlockSize))
+    elif [int(PlayerPos[0]), int(PlayerPos[1]-1)] == Exit:
+        screen.blit(stair, (xUL, yUL-BlockSize))
     else:
         screen.blit(background, (xUL, yUL-BlockSize))
 
-    if [int(PlayerPos[0]+1), int(PlayerPos[1]-1)] in Walls: # Up Right
+    # upright
+    if [int(PlayerPos[0]+1), int(PlayerPos[1]-1)] in Walls: 
         screen.blit(wall, (xUL+BlockSize, yUL-BlockSize))
+    elif [int(PlayerPos[0]+1), int(PlayerPos[1]-1)] == Exit:
+        screen.blit(stair, (xUL+BlockSize, yUL-BlockSize))
     else:
         screen.blit(background, (xUL+BlockSize, yUL-BlockSize))
 
-    if [int(PlayerPos[0]+1), int(PlayerPos[1])] in Walls: # Right
+    # right
+    if [int(PlayerPos[0]+1), int(PlayerPos[1])] in Walls:
         screen.blit(wall, (xUL+BlockSize, yUL))
+    elif [int(PlayerPos[0]+1), int(PlayerPos[1])] == Exit:
+        screen.blit(stair, (xUL+BlockSize, yUL))
     else:
         screen.blit(background, (xUL+BlockSize, yUL))
 
-    if [int(PlayerPos[0]+1), int(PlayerPos[1]+1)] in Walls: # Down Right
+    # downright
+    if [int(PlayerPos[0]+1), int(PlayerPos[1]+1)] in Walls: 
         screen.blit(wall, (xUL+BlockSize, yUL+BlockSize))
+    elif [int(PlayerPos[0]+1), int(PlayerPos[1]+1)] == Exit:
+        screen.blit(stair, (xUL+BlockSize, yUL+BlockSize))
     else:
         screen.blit(background, (xUL+BlockSize, yUL+BlockSize))
 
-    if [int(PlayerPos[0]), int(PlayerPos[1]+1)] in Walls: # Downd
+    # down
+    if [int(PlayerPos[0]), int(PlayerPos[1]+1)] in Walls: 
         screen.blit(wall, (xUL, yUL+BlockSize))
+    elif [int(PlayerPos[0]), int(PlayerPos[1]+1)] == Exit:
+        screen.blit(stair, (xUL, yUL+BlockSize))
     else:
         screen.blit(background, (xUL, yUL+BlockSize))
 
-    if [int(PlayerPos[0]-1), int(PlayerPos[1]+1)] in Walls: # Down Left
+    # downleft
+    if [int(PlayerPos[0]-1), int(PlayerPos[1]+1)] in Walls:
         screen.blit(wall, (xUL-BlockSize, yUL+BlockSize))
+    elif [int(PlayerPos[0]-1), int(PlayerPos[1]+1)] == Exit:
+        screen.blit(stair, (xUL-BlockSize, yUL+BlockSize))
     else:
         screen.blit(background, (xUL-BlockSize, yUL+BlockSize))
 
-    if [int(PlayerPos[0]-1), int(PlayerPos[1])] in Walls: # Left
+    # left
+    if [int(PlayerPos[0]-1), int(PlayerPos[1])] in Walls:
         screen.blit(wall, (xUL-BlockSize, yUL))
+    elif [int(PlayerPos[0]-1), int(PlayerPos[1])] == Exit:
+        screen.blit(stair, (xUL-BlockSize, yUL))
     else:
         screen.blit(background, (xUL-BlockSize, yUL))
 
@@ -180,13 +239,17 @@ def LocalRender(MapToRender):
     else:
         screen.blit(char, (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
 
-
+    # hud text
     text = font.render("[{}, {}]".format(int(PlayerPos[0]), int(PlayerPos[1])), True, (0, 0, 0))
     text2 = font.render("[{}, {}]".format(int(PlayerInBlockPos[0]), int(PlayerInBlockPos[1])), True, (0, 0, 0))
     text3 = font.render("FPS : {}".format(int(clock.get_fps())), True, (0, 0, 0))
+    text4 = font.render("Level : {}".format(lvl), True, (0, 0, 0))
+
     screen.blit(text, (WindowSize//2, 20)) 
     screen.blit(text2, (WindowSize//2, 40))
+    screen.blit(text4, (WindowSize-100, 20))
     
+    # update display
     pygame.display.flip()
 
 
@@ -194,8 +257,10 @@ def GoUp():
     """
     Thread run when Z button is pressed to go up in the maze
     """
-    global player, txt, Exit, n, right, left, WalkCount
+    global player, txt, Exit, right, left, WalkCount, lvl
+    # wall collision check
     if (([PlayerPos[0], int(PlayerPos[1] - (WalkDistance/BlockSize))]) not in Walls) or (PlayerInBlockPos[1] - WalkDistance >= PlayerHeight//2) :
+        # update data
         WalkCount += 1
         right = True
         left = False
@@ -204,20 +269,30 @@ def GoUp():
             PlayerPos[1] -= 1
             PlayerInBlockPos[1] += BlockSize
 
-        LocalRender(Map)
-
+        # exit point collision check
         if PlayerPos == Exit:
-            text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
-            screen.blit(text, (WindowSize//4, WindowSize//4))
-            pygame.display.flip()
+            lvl += 1
+            try:
+                render(Levels[lvl])
+            except IndexError:
+                text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
+                screen.blit(text, (WindowSize//4, WindowSize//4))
+                pygame.display.flip()
+                return(0) # force exit function
+
+        # update display
+        LocalRender(Levels[lvl])
+
 
 
 def GoDown():
     """
     Thread run when s button is pressed to go down in the maze
     """
-    global player, txt, Exit, right, left, WalkCount
+    global player, txt, Exit, right, left, WalkCount, lvl
+    # wall collision check
     if (([PlayerPos[0], int(PlayerPos[1] + (WalkDistance/BlockSize) + 1)]) not in Walls) or (PlayerInBlockPos[1] + WalkDistance <= BlockSize-PlayerHeight//2) :
+        # update data
         WalkCount += 1
         left = True
         right = False
@@ -226,20 +301,29 @@ def GoDown():
             PlayerPos[1] += 1
             PlayerInBlockPos[1] -= BlockSize
         
-        LocalRender(Map)
-        
+        # exit point collision check
         if PlayerPos == Exit:
-            text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
-            screen.blit(text, (WindowSize//4, WindowSize//4))
-            pygame.display.flip()
+            lvl += 1
+            try:
+                render(Levels[lvl])
+            except IndexError:
+                text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
+                screen.blit(text, (WindowSize//4, WindowSize//4))
+                pygame.display.flip()
+                return(0) # force exit function
+
+        # update display
+        LocalRender(Levels[lvl])
 
 
 def GoLeft():
     """
     Thread run when q button is pressed to go left in the maze
     """
-    global player, txt, Exit, WalkCount, left, right
+    global player, txt, Exit, WalkCount, left, right, lvl
+    # wall collision check
     if (([int(PlayerPos[0] - (WalkDistance/BlockSize)), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] - WalkDistance >= PlayerWidth) :
+        # update data
         WalkCount += 1
         left = True
         right = False
@@ -248,20 +332,29 @@ def GoLeft():
             PlayerPos[0] -= 1
             PlayerInBlockPos[0] += BlockSize
         
-        LocalRender(Map)
-        
+        # exit point collision check
         if PlayerPos == Exit:
-            text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
-            screen.blit(text, (WindowSize//4, WindowSize//4))
-            pygame.display.flip()
+            lvl += 1
+            try:
+                render(Levels[lvl])
+            except IndexError:
+                text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
+                screen.blit(text, (WindowSize//4, WindowSize//4))
+                pygame.display.flip()
+                return(0) # force exit function
+
+        # update display
+        LocalRender(Levels[lvl])
 
 
 def GoRight():
     """
     Thread run when d button is pressed to right down in the maze
     """
-    global player, txt, Exit, WalkCount, right, left
+    global player, txt, Exit, WalkCount, right, left, lvl
+    # wall collision check
     if (([int(PlayerPos[0] + (WalkDistance/BlockSize) + 1), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] + WalkDistance <= BlockSize-PlayerWidth) :
+        # update data
         WalkCount += 1
         right = True
         left = False
@@ -270,12 +363,19 @@ def GoRight():
             PlayerPos[0] += 1
             PlayerInBlockPos[0] -= BlockSize
         
-        LocalRender(Map)
-        
+        # exit point collision check
         if PlayerPos == Exit:
-            text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
-            screen.blit(text, (WindowSize//4, WindowSize//4))
-            pygame.display.flip()
+            lvl += 1
+            try:
+                render(Levels[lvl])
+            except IndexError:
+                text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
+                screen.blit(text, (WindowSize//4, WindowSize//4))
+                pygame.display.flip()
+                return(0) # force exit function
+
+        # update display
+        LocalRender(Levels[lvl])
 
 # =========================FRONTEND=========================
 # init window
@@ -283,8 +383,9 @@ pygame.init()
 screen = pygame.display.set_mode((WindowSize, WindowSize))
 pygame.display.set_caption("My Game")
 
-render(Map)
-LocalRender(Map)
+# init data & display
+render(Levels[lvl])
+LocalRender(Levels[lvl])
 
 # main loop
 running = True
@@ -295,6 +396,7 @@ while running:
         if event.type == pygame.QUIT: # check for closing window
             running = False
     
+    # movement keys
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_w]:
