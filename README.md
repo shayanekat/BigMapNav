@@ -29,3 +29,8 @@ the collisions
 Also cleared the code to be more readable.
 
 - 05/08/2020 : Added light centered in the player
+
+
+## Some screenshots of the game
+
+[In Game ScreenShot](Images\\screen1)
