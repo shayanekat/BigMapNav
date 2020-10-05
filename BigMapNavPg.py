@@ -6,25 +6,10 @@ C'est un projet pour simuler la navigation sur une grande map vu de haut, avec l
 uniquement les allentours du joueur toujours au cente
 """
 
-# TODO (21/09/2020): 
-#  DONE - initialiser la fenetre
-#  DONE - faire le design de la big map
-#  DONE - afficher la BigMap en entier
-#  DONE - implémenter le mouvement du joueur
-#  DONE - implémenter les collisions
-#  DONE - reduire la distance d'affichage 
-# ============== V1 Fini =====================
-#  DONE - exporter de tkinter vers pygame
-#  DONE - changer le joueur de bloc à petit cercle
-#  DONE - ajouter des couleurs
-#  DONE - ajouter l'implementation d'étages
-#   - implémentation de lumiere
-#   - implémentation de dynamique light
-#   - implémentation des ombres
-# ============== V2 Fini =====================
-#   - optimiser le code
-#   - ajouter des IAs (dans un premier temps dans un fichier test pour inclure du pathfinding)
-# ============== V3 Fini =====================
+# TODO (04/10/2020): 
+#   - add background music and sound effects
+#   - add lighting system
+
 
 # =========================BACKEND=========================
 # constant & parameters
@@ -111,6 +96,9 @@ char = pygame.image.load('Images\\standing.png')
 wall = pygame.image.load('Images\\bricks.png')
 background = pygame.image.load('Images\\bg.png')
 stair = pygame.image.load('Images\\stairs.png')
+
+light=pygame.image.load('Images\\grad.png')
+light=pygame.transform.scale(light, (500,500))
 
 
 def render(MapToRender):
@@ -238,17 +226,23 @@ def LocalRender(MapToRender):
         WalkCount +=1
     else:
         screen.blit(char, (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
+    
+    # light display
+    filter = pygame.surface.Surface((500, 500))
+    filter.fill(pygame.color.Color('Black')) # Black will give dark unlit areas, Grey will give you a fog
+    filter.blit(light,(0, 0)) # blit light to the filter surface -400 is to center effect
+    screen.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_MIN) # blit filter surface but with a blend
 
     # hud text
-    text = font.render("[{}, {}]".format(int(PlayerPos[0]), int(PlayerPos[1])), True, (0, 0, 0))
-    text2 = font.render("[{}, {}]".format(int(PlayerInBlockPos[0]), int(PlayerInBlockPos[1])), True, (0, 0, 0))
-    text3 = font.render("FPS : {}".format(int(clock.get_fps())), True, (0, 0, 0))
-    text4 = font.render("Level : {}".format(lvl), True, (0, 0, 0))
+    text = font.render("[{}, {}]".format(int(PlayerPos[0]), int(PlayerPos[1])), True, (255, 255, 255))
+    text2 = font.render("[{}, {}]".format(int(PlayerInBlockPos[0]), int(PlayerInBlockPos[1])), True, (255, 255, 255))
+    text3 = font.render("FPS : {}".format(int(clock.get_fps())), True, (255, 255, 255))
+    text4 = font.render("Level : {}".format(lvl), True, (255, 255, 255))
 
     screen.blit(text, (WindowSize//2, 20)) 
     screen.blit(text2, (WindowSize//2, 40))
     screen.blit(text4, (WindowSize-100, 20))
-    
+
     # update display
     pygame.display.flip()
 
@@ -409,7 +403,7 @@ while running:
         GoRight()
 
     # FPS update display
-    text3 = font.render("FPS : "+str(int(clock.get_fps())), True, (0, 0, 0))
+    text3 = font.render("FPS : "+str(int(clock.get_fps())), True, (255, 255, 255))
     screen.blit(text3, (10, 10))
     clock.tick(60)
     pygame.display.flip()
