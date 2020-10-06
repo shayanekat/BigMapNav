@@ -46,6 +46,7 @@ Walls = []
 PlayerPos = []
 player = ""
 Exit = []
+Lev = []
 
 # fonts
 pygame.font.init()
@@ -53,25 +54,25 @@ font = pygame.font.SysFont("Times", 20)
 WinFont = pygame.font.SysFont("Times", 20)
 
 # map design
-Floor1 = ["WWWWWWWWWWWWWWWWWWWW",
-          "WSW                W",
+Floor2 = ["WWWWWWWWWWWWWWWWWWWW",
+          "WP                 W",
           "W WWWWWWWWWWWWWWWW W",
-          "W        W         W",
-          "W WWWWWW W WWWWWWWWW",
-          "W W      W         W",
-          "W WWWWWWWWWWWWWWWW W",
-          "W                W W",
-          "W WWWWWWWWWWWWWW W W",
-          "W W   W   W      W W",
-          "WWW W   W   WWWWWW W",
-          "W W WWWWWWW W   W  W",
-          "W W W       W W W WW",
-          "W W W WWWWWWW W W  W",
-          "W W W         W  W W",
-          "W W WWWWWWWWWWWW W W",
-          "W W            W   W",
-          "W WWWWWWWWWWWWWWWW W",
-          "W                 PW",
+          "W W         W   W  W",
+          "W W WWWWWWW   W W WW",
+          "W W       WWWWW    W",
+          "W WWWWWWW     WWWW W",
+          "W       WWWWW  W W W",
+          "WWW WWW W   WW   W W",
+          "W W W   W W  WWWWW W",
+          "W W W  WW WW     W W",
+          "W W WW W   WWWWW W W",
+          "W W  W W W W   W W W",
+          "W WW W W W   W W W W",
+          "W W  W   WWWWW W W W",
+          "W W WWW WW   W W W W",
+          "W W     W  W   W W W",
+          "W WWWWW W WWWWWW W W",
+          "W       WLW      WSW",
           "WWWWWWWWWWWWWWWWWWWW"]
 
 
@@ -80,7 +81,7 @@ def render(MapToRender):
     Render function
     Render the level design
     """
-    global PlayerPos, player, txt, Exit
+    global PlayerPos, player, txt, Exit, Lev
 
     for i in range(MapSizeBlock):
         for j in range(MapSizeBlock):
@@ -96,6 +97,10 @@ def render(MapToRender):
             elif MapToRender[j][i] == "S": # S = Sortie
                 Exit = [i, j]
                 pygame.draw.rect(screen, (0, 255, 0), (i*BlockSize, j*BlockSize, BlockSize, BlockSize))
+            
+            elif MapToRender[j][i] == "L": # Lever
+                Lev = [i, j]
+                pygame.draw.rect(screen, (255, 255, 0), (i*BlockSize, j*BlockSize, BlockSize, BlockSize))
     
     pygame.display.flip()
 
@@ -106,7 +111,7 @@ pygame.init()
 screen = pygame.display.set_mode((WindowSize, WindowSize))
 pygame.display.set_caption("My Game")
 
-render(Floor1)
+render(Floor2)
 
 # main loop
 running = True

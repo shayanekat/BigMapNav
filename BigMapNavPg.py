@@ -6,9 +6,10 @@ C'est un projet pour simuler la navigation sur une grande map vu de haut, avec l
 uniquement les allentours du joueur toujours au cente
 """
 
-# TODO (04/10/2020): 
+# TODO (04/10/2020):
+#   - new level design with lever before continuing
+#   - add text on the bottom to explain the level
 #   - add background music and sound effects
-#   - add lighting system
 
 
 # =========================BACKEND=========================
@@ -34,6 +35,7 @@ PlayerPos = []
 player = ""
 Exit = []
 Levels = []
+Lev = []
 
 
 # fonts
@@ -68,7 +70,7 @@ Levels.append(rdc)
 Floor1 = ["WWWWWWWWWWWWWWWWWWWW",
           "WSW                W",
           "W WWWWWWWWWWWWWWWW W",
-          "W        W         W",
+          "WP       W         W",
           "W WWWWWW W WWWWWWWWW",
           "W W      W         W",
           "W WWWWWWWWWWWWWWWW W",
@@ -83,9 +85,31 @@ Floor1 = ["WWWWWWWWWWWWWWWWWWWW",
           "W W WWWWWWWWWWWW W W",
           "W W            W   W",
           "W WWWWWWWWWWWWWWWW W",
-          "W                 PW",
+          "W                 pW",
           "WWWWWWWWWWWWWWWWWWWW"]
 Levels.append(Floor1)
+
+Floor2 = ["WWWWWWWWWWWWWWWWWWWW",
+          "Wp                 W",
+          "W WWWWWWWWWWWWWWWW W",
+          "W W         W   W  W",
+          "W W WWWWWWW   W W WW",
+          "W W       WWWWW    W",
+          "W WWWWWWW     WWWW W",
+          "W       WWWWW  W W W",
+          "WWW WWW W   WW   W W",
+          "W W W   W W  WWWWW W",
+          "W W W  WW WW     W W",
+          "W W WW W   WWWWW W W",
+          "W W  W W W W   W W W",
+          "W WW W W W   W W W W",
+          "W W  W   WWWWW W W W",
+          "W W WWW WW   W W W W",
+          "W W     W  W   W W W",
+          "W WWWWW WPWWWWWW W W",
+          "W       WLW      WSW",
+          "WWWWWWWWWWWWWWWWWWWW"]
+Levels.append(Floor2)
 
 
 # images
@@ -97,8 +121,11 @@ wall = pygame.image.load('Images\\bricks.png')
 background = pygame.image.load('Images\\bg.png')
 stair = pygame.image.load('Images\\stairs.png')
 
-light=pygame.image.load('Images\\grad.png')
-light=pygame.transform.scale(light, (500,500))
+light = pygame.image.load('Images\\grad.png')
+light = pygame.transform.scale(light, (WindowSize, WindowSize))
+
+lever = pygame.image.load('Images\\lever.png')
+light=pygame.transform.scale(light, (BlockSize, BlockSize))
 
 
 def render(MapToRender):
@@ -106,7 +133,7 @@ def render(MapToRender):
     Render function
     Render the level design
     """
-    global PlayerPos, player, txt, Exit, Walls
+    global PlayerPos, player, txt, Exit, Walls, Lev
 
     # reset
     Walls = [] 
@@ -123,6 +150,9 @@ def render(MapToRender):
 
             elif MapToRender[j][i] == "S": # S = Sortie
                 Exit = [i, j]
+            
+            elif MapToRender[j][i] == "L": # Lever
+                Lev = [i, j]
 
 
 def LocalRender(MapToRender):
@@ -155,14 +185,18 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL-BlockSize, yUL-BlockSize))
     else:
         screen.blit(background, (xUL-BlockSize, yUL-BlockSize))
+    if [int(PlayerPos[0]), int(PlayerPos[1]-1)] == Lev:
+        screen.blit(lever, (xUL-BlockSize, yUL-BlockSize))
 
     # up
     if [int(PlayerPos[0]), int(PlayerPos[1]-1)] in Walls:
         screen.blit(wall, (xUL, yUL-BlockSize))
-    elif [int(PlayerPos[0]), int(PlayerPos[1]-1)] == Exit:
+    elif [int(PlayerPos[0]+1), int(PlayerPos[1]-1)] == Exit:
         screen.blit(stair, (xUL, yUL-BlockSize))
     else:
         screen.blit(background, (xUL, yUL-BlockSize))
+    if [int(PlayerPos[0]+1), int(PlayerPos[1])] == Lev:
+        screen.blit(lever, (xUL, yUL-BlockSize))
 
     # upright
     if [int(PlayerPos[0]+1), int(PlayerPos[1]-1)] in Walls: 
@@ -171,6 +205,8 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL+BlockSize, yUL-BlockSize))
     else:
         screen.blit(background, (xUL+BlockSize, yUL-BlockSize))
+    if [int(PlayerPos[0]+1), int(PlayerPos[1]-1)] == Lev:
+        screen.blit(lever, (xUL+BlockSize, yUL-BlockSize))
 
     # right
     if [int(PlayerPos[0]+1), int(PlayerPos[1])] in Walls:
@@ -179,6 +215,8 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL+BlockSize, yUL))
     else:
         screen.blit(background, (xUL+BlockSize, yUL))
+    if [int(PlayerPos[0]+1), int(PlayerPos[1])] == Lev:
+        screen.blit(lever, (xUL+BlockSize, yUL))
 
     # downright
     if [int(PlayerPos[0]+1), int(PlayerPos[1]+1)] in Walls: 
@@ -187,6 +225,8 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL+BlockSize, yUL+BlockSize))
     else:
         screen.blit(background, (xUL+BlockSize, yUL+BlockSize))
+    if [int(PlayerPos[0]+1), int(PlayerPos[1]+1)] == Lev:
+        screen.blit(lever, (xUL+BlockSize, yUL+BlockSize))
 
     # down
     if [int(PlayerPos[0]), int(PlayerPos[1]+1)] in Walls: 
@@ -195,6 +235,8 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL, yUL+BlockSize))
     else:
         screen.blit(background, (xUL, yUL+BlockSize))
+    if [int(PlayerPos[0]), int(PlayerPos[1]+1)] == Lev:
+        screen.blit(lever, (xUL, yUL+BlockSize))
 
     # downleft
     if [int(PlayerPos[0]-1), int(PlayerPos[1]+1)] in Walls:
@@ -203,6 +245,8 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL-BlockSize, yUL+BlockSize))
     else:
         screen.blit(background, (xUL-BlockSize, yUL+BlockSize))
+    if [int(PlayerPos[0]-1), int(PlayerPos[1]+1)] == Lev:
+        screen.blit(lever, (xUL-BlockSize, yUL+BlockSize))
 
     # left
     if [int(PlayerPos[0]-1), int(PlayerPos[1])] in Walls:
@@ -211,6 +255,8 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL-BlockSize, yUL))
     else:
         screen.blit(background, (xUL-BlockSize, yUL))
+    if [int(PlayerPos[0]-1), int(PlayerPos[1])] == Lev:
+        screen.blit(lever, (xUL-BlockSize, yUL))
 
     # middle background
     screen.blit(background, (xUL, yUL))
@@ -228,10 +274,10 @@ def LocalRender(MapToRender):
         screen.blit(char, (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
     
     # light display
-    filter = pygame.surface.Surface((500, 500))
+    """filter = pygame.surface.Surface((WindowSize, WindowSize))
     filter.fill(pygame.color.Color('Black')) # Black will give dark unlit areas, Grey will give you a fog
-    filter.blit(light,(0, 0)) # blit light to the filter surface -400 is to center effect
-    screen.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_MIN) # blit filter surface but with a blend
+    filter.blit(light,(WindowSize//4, WindowSize//4)) # blit light to the filter surface -400 is to center effect
+    screen.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_MIN) # blit filter surface but with a blend"""
 
     # hud text
     text = font.render("[{}, {}]".format(int(PlayerPos[0]), int(PlayerPos[1])), True, (255, 255, 255))
@@ -269,7 +315,7 @@ def GoUp():
             try:
                 render(Levels[lvl])
             except IndexError:
-                text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
+                text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
                 screen.blit(text, (WindowSize//4, WindowSize//4))
                 pygame.display.flip()
                 return(0) # force exit function
@@ -301,7 +347,7 @@ def GoDown():
             try:
                 render(Levels[lvl])
             except IndexError:
-                text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
+                text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
                 screen.blit(text, (WindowSize//4, WindowSize//4))
                 pygame.display.flip()
                 return(0) # force exit function
@@ -332,7 +378,7 @@ def GoLeft():
             try:
                 render(Levels[lvl])
             except IndexError:
-                text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
+                text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
                 screen.blit(text, (WindowSize//4, WindowSize//4))
                 pygame.display.flip()
                 return(0) # force exit function
@@ -363,7 +409,7 @@ def GoRight():
             try:
                 render(Levels[lvl])
             except IndexError:
-                text = WinFont.render("Congratulation, you found the exit".upper(), True, (0, 0, 0))
+                text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
                 screen.blit(text, (WindowSize//4, WindowSize//4))
                 pygame.display.flip()
                 return(0) # force exit function
