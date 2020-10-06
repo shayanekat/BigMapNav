@@ -1,13 +1,13 @@
 import pygame
 
 """
+Shayane Katchera
 PROGRAMME BIG MAP NAVIGATION
 C'est un projet pour simuler la navigation sur une grande map vu de haut, avec la camera qui regarde
 uniquement les allentours du joueur toujours au cente
 """
 
 # TODO (04/10/2020):
-#   - new level design with lever before continuing
 #   - add text on the bottom to explain the level
 #   - add background music and sound effects
 
@@ -29,6 +29,7 @@ clock = pygame.time.Clock()
 lvl = 0
 Opened = False
 SetLever = False
+BottomTextSpace = 50
 
 
 # init
@@ -45,6 +46,7 @@ LeverLevels = [2]
 pygame.font.init()
 font = pygame.font.SysFont("Times", 20)
 WinFont = pygame.font.SysFont("Times", 20)
+ExplainFont = pygame.font.SysFont("Times", 18)
 
 
 # map design
@@ -276,10 +278,10 @@ def LocalRender(MapToRender):
     else:
         screen.blit(char, (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
     
-    # light display
-    """filter = pygame.surface.Surface((WindowSize, WindowSize))
+    """# light display
+    filter = pygame.surface.Surface((WindowSize, WindowSize))
     filter.fill(pygame.color.Color('Black')) # Black will give dark unlit areas, Grey will give you a fog
-    filter.blit(light,(WindowSize//4, WindowSize//4)) # blit light to the filter surface -400 is to center effect
+    filter.blit(light,(0, 0)) # blit light to the filter surface -400 is to center effect
     screen.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_MIN) # blit filter surface but with a blend"""
 
     # hud text
@@ -291,6 +293,7 @@ def LocalRender(MapToRender):
     screen.blit(text, (WindowSize//2, 20)) 
     screen.blit(text2, (WindowSize//2, 40))
     screen.blit(text4, (WindowSize-100, 20))
+
 
     # update display
     pygame.display.flip()
@@ -326,7 +329,7 @@ def GoUp():
                         render(Levels[lvl])
                     except IndexError:
                         text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
-                        screen.blit(text, (WindowSize//4, WindowSize//4))
+                        screen.blit(text, (0, 0))
                         pygame.display.flip()
                         return(0) # force exit function
                 else:
@@ -337,7 +340,7 @@ def GoUp():
                     render(Levels[lvl])
                 except IndexError:
                     text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
-                    screen.blit(text, (WindowSize//4, WindowSize//4))
+                    screen.blit(text, (WindowSize//4, WindowSize//2-10))
                     pygame.display.flip()
                     return(0) # force exit function
 
@@ -376,7 +379,7 @@ def GoDown():
                         render(Levels[lvl])
                     except IndexError:
                         text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
-                        screen.blit(text, (WindowSize//4, WindowSize//4))
+                        screen.blit(text, (0, 0))
                         pygame.display.flip()
                         return(0) # force exit function
                 else:
@@ -387,7 +390,7 @@ def GoDown():
                     render(Levels[lvl])
                 except IndexError:
                     text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
-                    screen.blit(text, (WindowSize//4, WindowSize//4))
+                    screen.blit(text, (WindowSize//4, WindowSize//2-10))
                     pygame.display.flip()
                     return(0) # force exit function
 
@@ -425,7 +428,7 @@ def GoLeft():
                         render(Levels[lvl])
                     except IndexError:
                         text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
-                        screen.blit(text, (WindowSize//4, WindowSize//4))
+                        screen.blit(text, (0, 0))
                         pygame.display.flip()
                         return(0) # force exit function
                 else:
@@ -436,7 +439,7 @@ def GoLeft():
                     render(Levels[lvl])
                 except IndexError:
                     text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
-                    screen.blit(text, (WindowSize//4, WindowSize//4))
+                    screen.blit(text, (WindowSize//4, WindowSize//2-10))
                     pygame.display.flip()
                     return(0) # force exit function
 
@@ -474,7 +477,7 @@ def GoRight():
                         render(Levels[lvl])
                     except IndexError:
                         text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
-                        screen.blit(text, (WindowSize//4, WindowSize//4))
+                        screen.blit(text, (0, 0))
                         pygame.display.flip()
                         return(0) # force exit function
                 else:
@@ -485,7 +488,7 @@ def GoRight():
                     render(Levels[lvl])
                 except IndexError:
                     text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
-                    screen.blit(text, (WindowSize//4, WindowSize//4))
+                    screen.blit(text, (WindowSize//4, WindowSize//2-10))
                     pygame.display.flip()
                     return(0) # force exit function
 
@@ -495,7 +498,7 @@ def GoRight():
 # =========================FRONTEND=========================
 # init window
 pygame.init()
-screen = pygame.display.set_mode((WindowSize, WindowSize))
+screen = pygame.display.set_mode((WindowSize, WindowSize+BottomTextSpace))
 pygame.display.set_caption("My Game")
 
 # init data & display
@@ -527,10 +530,30 @@ while running:
     text3 = font.render("FPS : "+str(int(clock.get_fps())), True, (255, 255, 255))
     screen.blit(text3, (10, 10))
     clock.tick(60)
-    pygame.display.flip()
 
     # update data 
     if lvl in LeverLevels:
         SetLever = True
     else:
         SetLever = False
+
+    # Bottom text
+    pygame.draw.rect(screen, (0, 0, 0), (0, WindowSize, WindowSize, BottomTextSpace))
+    if lvl == 0:
+        text5 = ExplainFont.render("Welcome in the MazeGame. To pass this level, find the stairs", True, (255, 255, 255))
+        text5bis = ExplainFont.render("", True, (255, 255, 255))
+    elif lvl == 1:
+        text5 = ExplainFont.render("Welcome in the Level 2. To pass this level, find the stairs", True, (255, 255, 255))
+        text5bis = ExplainFont.render("", True, (255, 255, 255))
+    elif lvl == 2:
+        if Opened:
+            text5 = ExplainFont.render("Now, to pass this level, find the stairs", True, (255, 255, 255))
+            text5bis = ExplainFont.render("", True, (255, 255, 255))
+        else:
+            text5 = ExplainFont.render("Welcome in the Level 3. To pass this level, find the lever,", True, (255, 255, 255))
+            text5bis = ExplainFont.render("and then find the stairs", True, (255, 255, 255))
+
+    screen.blit(text5, (20, WindowSize+5))
+    screen.blit(text5bis, (20, WindowSize+30))
+
+    pygame.display.flip()

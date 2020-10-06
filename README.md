@@ -30,7 +30,7 @@ Also cleared the code to be more readable.
 
 - 05/08/2020 : Added light centered in the player
 
-- 06/08/2020 : added new level with lever mechanic
+- 06/08/2020 : added new level with lever mechanic. And added explanation text of the level on the bottom of the window
 
 
 ## Some screenshots of the game
