@@ -27,6 +27,8 @@ PlayerWidth = 32
 PlayerHeight = 48
 clock = pygame.time.Clock()
 lvl = 0
+Opened = False
+SetLever = False
 
 
 # init
@@ -36,6 +38,7 @@ player = ""
 Exit = []
 Levels = []
 Lev = []
+LeverLevels = [2]
 
 
 # fonts
@@ -125,7 +128,7 @@ light = pygame.image.load('Images\\grad.png')
 light = pygame.transform.scale(light, (WindowSize, WindowSize))
 
 lever = pygame.image.load('Images\\lever.png')
-light=pygame.transform.scale(light, (BlockSize, BlockSize))
+lever=pygame.transform.scale(lever, (BlockSize, BlockSize))
 
 
 def render(MapToRender):
@@ -185,13 +188,13 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL-BlockSize, yUL-BlockSize))
     else:
         screen.blit(background, (xUL-BlockSize, yUL-BlockSize))
-    if [int(PlayerPos[0]), int(PlayerPos[1]-1)] == Lev:
+    if [int(PlayerPos[0]-1), int(PlayerPos[1]-1)] == Lev:
         screen.blit(lever, (xUL-BlockSize, yUL-BlockSize))
 
     # up
     if [int(PlayerPos[0]), int(PlayerPos[1]-1)] in Walls:
         screen.blit(wall, (xUL, yUL-BlockSize))
-    elif [int(PlayerPos[0]+1), int(PlayerPos[1]-1)] == Exit:
+    elif [int(PlayerPos[0]), int(PlayerPos[1]-1)] == Exit:
         screen.blit(stair, (xUL, yUL-BlockSize))
     else:
         screen.blit(background, (xUL, yUL-BlockSize))
@@ -297,7 +300,7 @@ def GoUp():
     """
     Thread run when Z button is pressed to go up in the maze
     """
-    global player, txt, Exit, right, left, WalkCount, lvl
+    global player, txt, Exit, right, left, WalkCount, lvl, Opened
     # wall collision check
     if (([PlayerPos[0], int(PlayerPos[1] - (WalkDistance/BlockSize))]) not in Walls) or (PlayerInBlockPos[1] - WalkDistance >= PlayerHeight//2) :
         # update data
@@ -309,16 +312,34 @@ def GoUp():
             PlayerPos[1] -= 1
             PlayerInBlockPos[1] += BlockSize
 
+        # lever collision check
+        if SetLever:
+            if PlayerPos == Lev:
+                Opened = True
+
         # exit point collision check
         if PlayerPos == Exit:
-            lvl += 1
-            try:
-                render(Levels[lvl])
-            except IndexError:
-                text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
-                screen.blit(text, (WindowSize//4, WindowSize//4))
-                pygame.display.flip()
-                return(0) # force exit function
+            if SetLever:
+                if Opened:
+                    lvl += 1
+                    try:
+                        render(Levels[lvl])
+                    except IndexError:
+                        text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
+                        screen.blit(text, (WindowSize//4, WindowSize//4))
+                        pygame.display.flip()
+                        return(0) # force exit function
+                else:
+                    pass # complete this part later
+            else:
+                lvl += 1
+                try:
+                    render(Levels[lvl])
+                except IndexError:
+                    text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
+                    screen.blit(text, (WindowSize//4, WindowSize//4))
+                    pygame.display.flip()
+                    return(0) # force exit function
 
         # update display
         LocalRender(Levels[lvl])
@@ -329,7 +350,7 @@ def GoDown():
     """
     Thread run when s button is pressed to go down in the maze
     """
-    global player, txt, Exit, right, left, WalkCount, lvl
+    global player, txt, Exit, right, left, WalkCount, lvl, Opened
     # wall collision check
     if (([PlayerPos[0], int(PlayerPos[1] + (WalkDistance/BlockSize) + 1)]) not in Walls) or (PlayerInBlockPos[1] + WalkDistance <= BlockSize-PlayerHeight//2) :
         # update data
@@ -341,16 +362,34 @@ def GoDown():
             PlayerPos[1] += 1
             PlayerInBlockPos[1] -= BlockSize
         
+        # lever collision check
+        if SetLever:
+            if PlayerPos == Lev:
+                Opened = True
+
         # exit point collision check
         if PlayerPos == Exit:
-            lvl += 1
-            try:
-                render(Levels[lvl])
-            except IndexError:
-                text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
-                screen.blit(text, (WindowSize//4, WindowSize//4))
-                pygame.display.flip()
-                return(0) # force exit function
+            if SetLever:
+                if Opened:
+                    lvl += 1
+                    try:
+                        render(Levels[lvl])
+                    except IndexError:
+                        text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
+                        screen.blit(text, (WindowSize//4, WindowSize//4))
+                        pygame.display.flip()
+                        return(0) # force exit function
+                else:
+                    pass # complete this part later
+            else:
+                lvl += 1
+                try:
+                    render(Levels[lvl])
+                except IndexError:
+                    text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
+                    screen.blit(text, (WindowSize//4, WindowSize//4))
+                    pygame.display.flip()
+                    return(0) # force exit function
 
         # update display
         LocalRender(Levels[lvl])
@@ -360,7 +399,7 @@ def GoLeft():
     """
     Thread run when q button is pressed to go left in the maze
     """
-    global player, txt, Exit, WalkCount, left, right, lvl
+    global player, txt, Exit, WalkCount, left, right, lvl, Opened
     # wall collision check
     if (([int(PlayerPos[0] - (WalkDistance/BlockSize)), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] - WalkDistance >= PlayerWidth) :
         # update data
@@ -372,16 +411,34 @@ def GoLeft():
             PlayerPos[0] -= 1
             PlayerInBlockPos[0] += BlockSize
         
+        # lever collision check
+        if SetLever:
+            if PlayerPos == Lev:
+                Opened = True
+
         # exit point collision check
         if PlayerPos == Exit:
-            lvl += 1
-            try:
-                render(Levels[lvl])
-            except IndexError:
-                text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
-                screen.blit(text, (WindowSize//4, WindowSize//4))
-                pygame.display.flip()
-                return(0) # force exit function
+            if SetLever:
+                if Opened:
+                    lvl += 1
+                    try:
+                        render(Levels[lvl])
+                    except IndexError:
+                        text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
+                        screen.blit(text, (WindowSize//4, WindowSize//4))
+                        pygame.display.flip()
+                        return(0) # force exit function
+                else:
+                    pass # complete this part later
+            else:
+                lvl += 1
+                try:
+                    render(Levels[lvl])
+                except IndexError:
+                    text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
+                    screen.blit(text, (WindowSize//4, WindowSize//4))
+                    pygame.display.flip()
+                    return(0) # force exit function
 
         # update display
         LocalRender(Levels[lvl])
@@ -391,7 +448,7 @@ def GoRight():
     """
     Thread run when d button is pressed to right down in the maze
     """
-    global player, txt, Exit, WalkCount, right, left, lvl
+    global player, txt, Exit, WalkCount, right, left, lvl, Opened
     # wall collision check
     if (([int(PlayerPos[0] + (WalkDistance/BlockSize) + 1), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] + WalkDistance <= BlockSize-PlayerWidth) :
         # update data
@@ -403,16 +460,34 @@ def GoRight():
             PlayerPos[0] += 1
             PlayerInBlockPos[0] -= BlockSize
         
+        # lever collision check
+        if SetLever:
+            if PlayerPos == Lev:
+                Opened = True
+
         # exit point collision check
         if PlayerPos == Exit:
-            lvl += 1
-            try:
-                render(Levels[lvl])
-            except IndexError:
-                text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
-                screen.blit(text, (WindowSize//4, WindowSize//4))
-                pygame.display.flip()
-                return(0) # force exit function
+            if SetLever:
+                if Opened:
+                    lvl += 1
+                    try:
+                        render(Levels[lvl])
+                    except IndexError:
+                        text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
+                        screen.blit(text, (WindowSize//4, WindowSize//4))
+                        pygame.display.flip()
+                        return(0) # force exit function
+                else:
+                    pass # complete this part later
+            else:
+                lvl += 1
+                try:
+                    render(Levels[lvl])
+                except IndexError:
+                    text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
+                    screen.blit(text, (WindowSize//4, WindowSize//4))
+                    pygame.display.flip()
+                    return(0) # force exit function
 
         # update display
         LocalRender(Levels[lvl])
@@ -453,3 +528,9 @@ while running:
     screen.blit(text3, (10, 10))
     clock.tick(60)
     pygame.display.flip()
+
+    # update data 
+    if lvl in LeverLevels:
+        SetLever = True
+    else:
+        SetLever = False
