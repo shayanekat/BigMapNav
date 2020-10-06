@@ -35,4 +35,4 @@ Also cleared the code to be more readable.
 
 ## Some screenshots of the game
 
-[In Game ScreenShot](Images\\screen1)
+![In Game ScreenShot](https://github.com/shayanekat/BigMapNav/blob/master/Images/sceen1.png)
