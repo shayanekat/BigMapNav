@@ -8,7 +8,6 @@ uniquement les allentours du joueur toujours au cente
 """
 
 # TODO (04/10/2020):
-#   - add text on the bottom to explain the level
 #   - add background music and sound effects
 
 
@@ -133,6 +132,7 @@ lever = pygame.image.load('Images\\lever.png')
 lever=pygame.transform.scale(lever, (BlockSize, BlockSize))
 
 
+# functions
 def render(MapToRender):
     """
     Render function
@@ -494,6 +494,7 @@ def GoRight():
 
         # update display
         LocalRender(Levels[lvl])
+
 
 # =========================FRONTEND=========================
 # init window
