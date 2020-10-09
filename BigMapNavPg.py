@@ -59,7 +59,7 @@ rdc = ["WWWWWWWWWWWWWWWWWWWW",
        "W W WWWWWWWWW    W W",
        "W W           WW W W",
        "W WWWWWWWWWWWWWW W W",
-       "W        p   W   W W",
+       "W        P   W   W W",
        "W WWWWWWWWWW W WWW W",
        "W          W W   W W",
        "W WWWWWWWW W WWWWW W",
@@ -67,14 +67,14 @@ rdc = ["WWWWWWWWWWWWWWWWWWWW",
        "W W  WWWWWWW W W W W",
        "W WW W     W W W   W",
        "W  WWW W WWW W WWWWW",
-       "WW     W     W P   S",
+       "WW     W     W     S",
        "WWWWWWWWWWWWWWWWWWWW"]
 Levels.append(rdc)
 
 Floor1 = ["WWWWWWWWWWWWWWWWWWWW",
           "WSW                W",
           "W WWWWWWWWWWWWWWWW W",
-          "WP       W         W",
+          "W        W         W",
           "W WWWWWW W WWWWWWWWW",
           "W W      W         W",
           "W WWWWWWWWWWWWWWWW W",
@@ -89,12 +89,12 @@ Floor1 = ["WWWWWWWWWWWWWWWWWWWW",
           "W W WWWWWWWWWWWW W W",
           "W W            W   W",
           "W WWWWWWWWWWWWWWWW W",
-          "W                 pW",
+          "W                 PW",
           "WWWWWWWWWWWWWWWWWWWW"]
 Levels.append(Floor1)
 
 Floor2 = ["WWWWWWWWWWWWWWWWWWWW",
-          "Wp                 W",
+          "WP                 W",
           "W WWWWWWWWWWWWWWWW W",
           "W W         W   W  W",
           "W W WWWWWWW   W W WW",
@@ -110,7 +110,7 @@ Floor2 = ["WWWWWWWWWWWWWWWWWWWW",
           "W W  W   WWWWW W W W",
           "W W WWW WW   W W W W",
           "W W     W  W   W W W",
-          "W WWWWW WPWWWWWW W W",
+          "W WWWWW W WWWWWW W W",
           "W       WLW      WSW",
           "WWWWWWWWWWWWWWWWWWWW"]
 Levels.append(Floor2)
@@ -490,7 +490,7 @@ def GoRight():
                     text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
                     screen.blit(text, (WindowSize//4, WindowSize//2-10))
                     pygame.display.flip()
-                    return(0) # force exit function
+                    return 0 # force exit function
 
         # update display
         LocalRender(Levels[lvl])
