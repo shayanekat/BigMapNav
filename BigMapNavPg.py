@@ -8,7 +8,9 @@ uniquement les allentours du joueur toujours au cente
 """
 
 # TODO (04/10/2020):
-#   - add background music and sound effects
+#   - add level with more than one lever
+#   - add level with levers to activate in an exact order
+#   - add level wil lot of lever, but not all necessary to finish level
 
 
 # =========================BACKEND=========================
