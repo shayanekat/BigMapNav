@@ -11,6 +11,7 @@ uniquement les allentours du joueur toujours au cente
 #   - add level with more than one lever
 #   - add level with levers to activate in an exact order
 #   - add level wil lot of lever, but not all necessary to finish level
+#   - add monsters with basical movment, and a way to defeeat them
 
 
 # =========================BACKEND=========================
