@@ -8,7 +8,10 @@ uniquement les allentours du joueur toujours au cente
 """
 
 # TODO (04/10/2020):
-#   - add background music and sound effects
+#   - add level with more than one lever
+#   - add level with levers to activate in an exact order
+#   - add level wil lot of lever, but not all necessary to finish level
+#   - add monsters with basical movment, and a way to defeeat them
 
 
 # =========================BACKEND=========================
@@ -29,6 +32,7 @@ lvl = 0
 Opened = False
 SetLever = False
 BottomTextSpace = 50
+count = 0
 
 
 # init
@@ -38,7 +42,7 @@ player = ""
 Exit = []
 Levels = []
 Lev = []
-LeverLevels = [2]
+LeverLevels = [2, 3]
 
 
 # fonts
@@ -59,7 +63,7 @@ rdc = ["WWWWWWWWWWWWWWWWWWWW",
        "W W WWWWWWWWW    W W",
        "W W           WW W W",
        "W WWWWWWWWWWWWWW W W",
-       "W        p   W   W W",
+       "W        P   W   W W",
        "W WWWWWWWWWW W WWW W",
        "W          W W   W W",
        "W WWWWWWWW W WWWWW W",
@@ -67,14 +71,14 @@ rdc = ["WWWWWWWWWWWWWWWWWWWW",
        "W W  WWWWWWW W W W W",
        "W WW W     W W W   W",
        "W  WWW W WWW W WWWWW",
-       "WW     W     W P   S",
+       "WW     W     W     S",
        "WWWWWWWWWWWWWWWWWWWW"]
 Levels.append(rdc)
 
 Floor1 = ["WWWWWWWWWWWWWWWWWWWW",
           "WSW                W",
           "W WWWWWWWWWWWWWWWW W",
-          "WP       W         W",
+          "W        W         W",
           "W WWWWWW W WWWWWWWWW",
           "W W      W         W",
           "W WWWWWWWWWWWWWWWW W",
@@ -89,12 +93,12 @@ Floor1 = ["WWWWWWWWWWWWWWWWWWWW",
           "W W WWWWWWWWWWWW W W",
           "W W            W   W",
           "W WWWWWWWWWWWWWWWW W",
-          "W                 pW",
+          "W                 PW",
           "WWWWWWWWWWWWWWWWWWWW"]
 Levels.append(Floor1)
 
 Floor2 = ["WWWWWWWWWWWWWWWWWWWW",
-          "Wp                 W",
+          "WP                 W",
           "W WWWWWWWWWWWWWWWW W",
           "W W         W   W  W",
           "W W WWWWWWW   W W WW",
@@ -110,10 +114,32 @@ Floor2 = ["WWWWWWWWWWWWWWWWWWWW",
           "W W  W   WWWWW W W W",
           "W W WWW WW   W W W W",
           "W W     W  W   W W W",
-          "W WWWWW WPWWWWWW W W",
+          "W WWWWW W WWWWWW W W",
           "W       WLW      WSW",
           "WWWWWWWWWWWWWWWWWWWW"]
 Levels.append(Floor2)
+
+Floor3 = ["WWWWWWWWWWWWWWWWWWWW",
+          "WSW              WLW",
+          "W W WWWWWWWWWWWW W W",
+          "W W W            W W",
+          "W W W WWWWWWWWWWWW W",
+          "W W W W     W   WW W",
+          "W   W W WWW W W W  W",
+          "WWW W W W   W W W WW",
+          "W   W   W WWW W W  W",
+          "W WWWWWWW WWW W WW W",
+          "W W       W   W    W",
+          "W W WWWWWWWWWWW WWWWW",
+          "W W W   W   W      W",
+          "W W W W W W W WWWW W",
+          "W W   W   W   W    W",
+          "W WWWWWWWWWWWWW WWWW",
+          "W W   W   W   W    W",
+          "W W W W W W W WWWW W",
+          "WL  W   W   W      W",
+          "WWWWWWWWWWWWWWWWWWWW"]
+Levels.append(Floor3)
 
 
 # images
@@ -157,7 +183,7 @@ def render(MapToRender):
                 Exit = [i, j]
             
             elif MapToRender[j][i] == "L": # Lever
-                Lev = [i, j]
+                Lev.append([i, j])
 
 
 def LocalRender(MapToRender):
@@ -278,11 +304,11 @@ def LocalRender(MapToRender):
     else:
         screen.blit(char, (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
     
-    """# light display
+    # light display
     filter = pygame.surface.Surface((WindowSize, WindowSize))
     filter.fill(pygame.color.Color('Black')) # Black will give dark unlit areas, Grey will give you a fog
     filter.blit(light,(0, 0)) # blit light to the filter surface -400 is to center effect
-    screen.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_MIN) # blit filter surface but with a blend"""
+    screen.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_MIN) # blit filter surface but with a blend
 
     # hud text
     text = font.render("[{}, {}]".format(int(PlayerPos[0]), int(PlayerPos[1])), True, (255, 255, 255))
@@ -303,13 +329,12 @@ def GoUp():
     """
     Thread run when Z button is pressed to go up in the maze
     """
-    global player, txt, Exit, right, left, WalkCount, lvl, Opened
+    global player, txt, Exit, right, left, WalkCount, lvl, Opened, text5
     # wall collision check
     if (([PlayerPos[0], int(PlayerPos[1] - (WalkDistance/BlockSize))]) not in Walls) or (PlayerInBlockPos[1] - WalkDistance >= PlayerHeight//2) :
         # update data
         WalkCount += 1
         right = True
-        left = False
         PlayerInBlockPos[1] -= WalkDistance
         if PlayerInBlockPos[1] < 0:
             PlayerPos[1] -= 1
@@ -317,8 +342,12 @@ def GoUp():
 
         # lever collision check
         if SetLever:
-            if PlayerPos == Lev:
-                Opened = True
+            if PlayerPos in Lev:
+                if len(Lev) < 2: # found all levers
+                    Opened = True
+                else:
+                    Lev.pop(Lev.index(PlayerPos))
+                    pygame.display.flip()
 
         # exit point collision check
         if PlayerPos == Exit:
@@ -353,13 +382,12 @@ def GoDown():
     """
     Thread run when s button is pressed to go down in the maze
     """
-    global player, txt, Exit, right, left, WalkCount, lvl, Opened
+    global player, txt, Exit, right, left, WalkCount, lvl, Opened, text5
     # wall collision check
     if (([PlayerPos[0], int(PlayerPos[1] + (WalkDistance/BlockSize) + 1)]) not in Walls) or (PlayerInBlockPos[1] + WalkDistance <= BlockSize-PlayerHeight//2) :
         # update data
         WalkCount += 1
         left = True
-        right = False
         PlayerInBlockPos[1] += WalkDistance
         if PlayerInBlockPos[1] > BlockSize:
             PlayerPos[1] += 1
@@ -367,8 +395,13 @@ def GoDown():
         
         # lever collision check
         if SetLever:
-            if PlayerPos == Lev:
-                Opened = True
+            if PlayerPos in Lev:
+                if len(Lev) < 2: # found all levers
+                    Opened = True
+                else:
+                    Lev.pop(Lev.index(PlayerPos))
+                    pygame.display.flip()
+                    
 
         # exit point collision check
         if PlayerPos == Exit:
@@ -402,13 +435,12 @@ def GoLeft():
     """
     Thread run when q button is pressed to go left in the maze
     """
-    global player, txt, Exit, WalkCount, left, right, lvl, Opened
+    global player, txt, Exit, WalkCount, left, right, lvl, Opened, text5
     # wall collision check
     if (([int(PlayerPos[0] - (WalkDistance/BlockSize)), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] - WalkDistance >= PlayerWidth) :
         # update data
         WalkCount += 1
         left = True
-        right = False
         PlayerInBlockPos[0] -= WalkDistance
         if PlayerInBlockPos[0] < 0:
             PlayerPos[0] -= 1
@@ -416,8 +448,12 @@ def GoLeft():
         
         # lever collision check
         if SetLever:
-            if PlayerPos == Lev:
-                Opened = True
+            if PlayerPos in Lev:
+                if len(Lev) < 2: # found all lever
+                    Opened = True
+                else:
+                    Lev.pop(Lev.index(PlayerPos))
+                    pygame.display.flip()
 
         # exit point collision check
         if PlayerPos == Exit:
@@ -451,13 +487,12 @@ def GoRight():
     """
     Thread run when d button is pressed to right down in the maze
     """
-    global player, txt, Exit, WalkCount, right, left, lvl, Opened
+    global player, txt, Exit, WalkCount, right, left, lvl, Opened, text5
     # wall collision check
     if (([int(PlayerPos[0] + (WalkDistance/BlockSize) + 1), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] + WalkDistance <= BlockSize-PlayerWidth) :
         # update data
         WalkCount += 1
         right = True
-        left = False
         PlayerInBlockPos[0] += WalkDistance
         if PlayerInBlockPos[0] > BlockSize:
             PlayerPos[0] += 1
@@ -465,8 +500,15 @@ def GoRight():
         
         # lever collision check
         if SetLever:
-            if PlayerPos == Lev:
-                Opened = True
+            if PlayerPos in Lev:
+                if len(Lev) < 2: # found all levers
+                    Opened = True
+                    
+                    
+                else:
+                    
+                    Lev.pop(Lev.index(PlayerPos))
+                    pygame.display.flip()
 
         # exit point collision check
         if PlayerPos == Exit:
@@ -490,10 +532,11 @@ def GoRight():
                     text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
                     screen.blit(text, (WindowSize//4, WindowSize//2-10))
                     pygame.display.flip()
-                    return(0) # force exit function
+                    return 0 # force exit function
 
         # update display
         LocalRender(Levels[lvl])
+
 
 
 # =========================FRONTEND=========================
@@ -553,6 +596,13 @@ while running:
         else:
             text5 = ExplainFont.render("Welcome in the Level 3. To pass this level, find the lever,", True, (255, 255, 255))
             text5bis = ExplainFont.render("and then find the stairs", True, (255, 255, 255))
+    elif lvl == 3:
+        if not Opened:
+            text5 = ExplainFont.render("Welcome in the Level 4. To pass this level, find the levers,", True, (255, 255, 255))
+            text5bis = ExplainFont.render("and then find the stairs", True, (255, 255, 255))
+        else:
+            text5 = ExplainFont.render("Now, to pass this level, find the stairs", True, (255, 255, 255))
+            text5bis = ExplainFont.render("", True, (255, 255, 255))
 
     screen.blit(text5, (20, WindowSize+5))
     screen.blit(text5bis, (20, WindowSize+30))
