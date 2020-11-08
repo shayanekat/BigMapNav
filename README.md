@@ -32,6 +32,9 @@ Also cleared the code to be more readable.
 
 - 06/08/2020 : added new level with lever mechanic. And added explanation text of the level on the bottom of the window
 
+- 08/11/2020 : added new idea of level mechanics in the TODO part. Also changed name of the project, of file, and deleted useless file.
+added new python file for testing new levels
+
 
 ## Some screenshots of the game
 

@@ -304,11 +304,11 @@ def LocalRender(MapToRender):
     else:
         screen.blit(char, (WindowSize//2-PlayerWidth, WindowSize//2-PlayerHeight))
     
-    """# light display
+    # light display
     filter = pygame.surface.Surface((WindowSize, WindowSize))
     filter.fill(pygame.color.Color('Black')) # Black will give dark unlit areas, Grey will give you a fog
     filter.blit(light,(0, 0)) # blit light to the filter surface -400 is to center effect
-    screen.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_MIN) # blit filter surface but with a blend"""
+    screen.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_MIN) # blit filter surface but with a blend
 
     # hud text
     text = font.render("[{}, {}]".format(int(PlayerPos[0]), int(PlayerPos[1])), True, (255, 255, 255))
@@ -329,13 +329,12 @@ def GoUp():
     """
     Thread run when Z button is pressed to go up in the maze
     """
-    global player, txt, Exit, right, left, WalkCount, lvl, Opened, count
+    global player, txt, Exit, right, left, WalkCount, lvl, Opened, text5
     # wall collision check
     if (([PlayerPos[0], int(PlayerPos[1] - (WalkDistance/BlockSize))]) not in Walls) or (PlayerInBlockPos[1] - WalkDistance >= PlayerHeight//2) :
         # update data
         WalkCount += 1
         right = True
-        left = False
         PlayerInBlockPos[1] -= WalkDistance
         if PlayerInBlockPos[1] < 0:
             PlayerPos[1] -= 1
@@ -343,14 +342,12 @@ def GoUp():
 
         # lever collision check
         if SetLever:
-            count += 1
             if PlayerPos in Lev:
-                if count == len(Lev): # found all levers
+                if len(Lev) < 2: # found all levers
                     Opened = True
-                    count = 0
                 else:
-                    text5 = ExplainFont.render("You have still {} lever(s) to find".format(len(Lev)-count), True, (255, 255, 255))
-                    text5bis = ExplainFont.render("", True, (255, 255, 255))
+                    Lev.pop(Lev.index(PlayerPos))
+                    pygame.display.flip()
 
         # exit point collision check
         if PlayerPos == Exit:
@@ -363,7 +360,6 @@ def GoUp():
                         text = WinFont.render("Congratulation, you found the exit".upper(), True, (255, 255, 255))
                         screen.blit(text, (0, 0))
                         pygame.display.flip()
-                        count = 0
                         return(0) # force exit function
                 else:
                     pass # complete this part later
@@ -386,13 +382,12 @@ def GoDown():
     """
     Thread run when s button is pressed to go down in the maze
     """
-    global player, txt, Exit, right, left, WalkCount, lvl, Opened, count
+    global player, txt, Exit, right, left, WalkCount, lvl, Opened, text5
     # wall collision check
     if (([PlayerPos[0], int(PlayerPos[1] + (WalkDistance/BlockSize) + 1)]) not in Walls) or (PlayerInBlockPos[1] + WalkDistance <= BlockSize-PlayerHeight//2) :
         # update data
         WalkCount += 1
         left = True
-        right = False
         PlayerInBlockPos[1] += WalkDistance
         if PlayerInBlockPos[1] > BlockSize:
             PlayerPos[1] += 1
@@ -400,14 +395,13 @@ def GoDown():
         
         # lever collision check
         if SetLever:
-            count += 1
             if PlayerPos in Lev:
-                if count == len(Lev): # found all levers
+                if len(Lev) < 2: # found all levers
                     Opened = True
-                    count = 0
                 else:
-                    text5 = ExplainFont.render("You have still {} lever(s) to find".format(len(Lev)-count), True, (255, 255, 255))
-                    text5bis = ExplainFont.render("", True, (255, 255, 255))
+                    Lev.pop(Lev.index(PlayerPos))
+                    pygame.display.flip()
+                    
 
         # exit point collision check
         if PlayerPos == Exit:
@@ -441,13 +435,12 @@ def GoLeft():
     """
     Thread run when q button is pressed to go left in the maze
     """
-    global player, txt, Exit, WalkCount, left, right, lvl, Opened, count
+    global player, txt, Exit, WalkCount, left, right, lvl, Opened, text5
     # wall collision check
     if (([int(PlayerPos[0] - (WalkDistance/BlockSize)), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] - WalkDistance >= PlayerWidth) :
         # update data
         WalkCount += 1
         left = True
-        right = False
         PlayerInBlockPos[0] -= WalkDistance
         if PlayerInBlockPos[0] < 0:
             PlayerPos[0] -= 1
@@ -455,14 +448,12 @@ def GoLeft():
         
         # lever collision check
         if SetLever:
-            count += 1
             if PlayerPos in Lev:
-                if count == len(Lev): # found all levers
+                if len(Lev) < 2: # found all lever
                     Opened = True
-                    count = 0
                 else:
-                    text5 = ExplainFont.render("You have still {} lever(s) to find".format(len(Lev)-count), True, (255, 255, 255))
-                    text5bis = ExplainFont.render("", True, (255, 255, 255))
+                    Lev.pop(Lev.index(PlayerPos))
+                    pygame.display.flip()
 
         # exit point collision check
         if PlayerPos == Exit:
@@ -496,13 +487,12 @@ def GoRight():
     """
     Thread run when d button is pressed to right down in the maze
     """
-    global player, txt, Exit, WalkCount, right, left, lvl, Opened, count
+    global player, txt, Exit, WalkCount, right, left, lvl, Opened, text5
     # wall collision check
     if (([int(PlayerPos[0] + (WalkDistance/BlockSize) + 1), PlayerPos[1]]) not in Walls) or (PlayerInBlockPos[0] + WalkDistance <= BlockSize-PlayerWidth) :
         # update data
         WalkCount += 1
         right = True
-        left = False
         PlayerInBlockPos[0] += WalkDistance
         if PlayerInBlockPos[0] > BlockSize:
             PlayerPos[0] += 1
@@ -510,14 +500,15 @@ def GoRight():
         
         # lever collision check
         if SetLever:
-            count += 1
             if PlayerPos in Lev:
-                if count == len(Lev): # found all levers
+                if len(Lev) < 2: # found all levers
                     Opened = True
-                    count = 0
+                    
+                    
                 else:
-                    text5 = ExplainFont.render("You have still {} lever(s) to find".format(len(Lev)-count), True, (255, 255, 255))
-                    text5bis = ExplainFont.render("", True, (255, 255, 255))
+                    
+                    Lev.pop(Lev.index(PlayerPos))
+                    pygame.display.flip()
 
         # exit point collision check
         if PlayerPos == Exit:
@@ -545,6 +536,7 @@ def GoRight():
 
         # update display
         LocalRender(Levels[lvl])
+
 
 
 # =========================FRONTEND=========================
