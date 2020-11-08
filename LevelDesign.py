@@ -6,25 +6,7 @@ C'est un projet pour simuler la navigation sur une grande map vu de haut, avec l
 uniquement les allentours du joueur toujours au cente
 """
 
-# TODO (21/09/2020): 
-#  DONE - initialiser la fenetre
-#  DONE - faire le design de la big map
-#  DONE - afficher la BigMap en entier
-#  DONE - implémenter le mouvement du joueur
-#  DONE - implémenter les collisions
-#  DONE - reduire la distance d'affichage 
-# ============== V1 Fini =====================
-#  DONE - exporter de tkinter vers pygame
-#  DONE - changer le joueur de bloc à petit cercle
-#  DONE - ajouter des couleurs
-#   - ajouter l'implementation d'étages
-#   - implémentation de lumiere
-#   - implémentation de dynamique light
-#   - implémentation des ombres
-# ============== V2 Fini =====================
-#   - optimiser le code
-#   - ajouter des IAs (dans un premier temps dans un fichier test pour inclure du pathfinding)
-# ============== V3 Fini =====================
+
 
 # =========================BACKEND=========================
 # constant & parameters
@@ -55,24 +37,24 @@ WinFont = pygame.font.SysFont("Times", 20)
 
 # map design
 Floor2 = ["WWWWWWWWWWWWWWWWWWWW",
-          "WP                 W",
-          "W WWWWWWWWWWWWWWWW W",
-          "W W         W   W  W",
-          "W W WWWWWWW   W W WW",
-          "W W       WWWWW    W",
-          "W WWWWWWW     WWWW W",
-          "W       WWWWW  W W W",
-          "WWW WWW W   WW   W W",
-          "W W W   W W  WWWWW W",
-          "W W W  WW WW     W W",
-          "W W WW W   WWWWW W W",
-          "W W  W W W W   W W W",
-          "W WW W W W   W W W W",
-          "W W  W   WWWWW W W W",
-          "W W WWW WW   W W W W",
-          "W W     W  W   W W W",
-          "W WWWWW W WWWWWW W W",
-          "W       WLW      WSW",
+          "WSW              WLW",
+          "W W WWWWWWWWWWWW W W",
+          "W W W            W W",
+          "W W W WWWWWWWWWWWW W",
+          "W W W W     W   WW W",
+          "W   W W WWW W W W  W",
+          "WWW W W W   W W W WW",
+          "W   W   W WWW W W  W",
+          "W WWWWWWW WWW W WW W",
+          "W W       W   W    W",
+          "W W WWWWWWWWWWW WWWWW",
+          "W W W   W   W      W",
+          "W W W W W W W WWWW W",
+          "W W   W   W   W    W",
+          "W WWWWWWWWWWWWW WWWW",
+          "W W   W   W   W    W",
+          "W W W W W W W WWWW W",
+          "WL  W   W   W     PW",
           "WWWWWWWWWWWWWWWWWWWW"]
 
 
