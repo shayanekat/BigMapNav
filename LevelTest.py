@@ -53,72 +53,6 @@ ExplainFont = pygame.font.SysFont("Times", 18)
 
 
 # map design
-rdc = ["WWWWWWWWWWWWWWWWWWWW",
-       "W   W              W",
-       "W W W WWWWWWWWWWWW W",
-       "W W W W            W",
-       "W W   W W WWWWWWWWWW",
-       "W WWWWW W W        W",
-       "W W     W   WWWWWW W",
-       "W W WWWWWWWWW    W W",
-       "W W           WW W W",
-       "W WWWWWWWWWWWWWW W W",
-       "W        p   W   W W",
-       "W WWWWWWWWWW W WWW W",
-       "W          W W   W W",
-       "W WWWWWWWW W WWWWW W",
-       "W W        W W   W W",
-       "W W  WWWWWWW W W W W",
-       "W WW W     W W W   W",
-       "W  WWW W WWW W WWWWW",
-       "WW     W     W    PS",
-       "WWWWWWWWWWWWWWWWWWWW"]
-Levels.append(rdc)
-
-Floor1 = ["WWWWWWWWWWWWWWWWWWWW",
-          "WSW                W",
-          "WPWWWWWWWWWWWWWWWW W",
-          "W        W         W",
-          "W WWWWWW W WWWWWWWWW",
-          "W W      W         W",
-          "W WWWWWWWWWWWWWWWW W",
-          "W                W W",
-          "W WWWWWWWWWWWWWW W W",
-          "W W   W   W      W W",
-          "WWW W   W   WWWWWW W",
-          "W W WWWWWWW W   W  W",
-          "W W W       W W W WW",
-          "W W W WWWWWWW W W  W",
-          "W W W         W  W W",
-          "W W WWWWWWWWWWWW W W",
-          "W W            W   W",
-          "W WWWWWWWWWWWWWWWW W",
-          "W                 pW",
-          "WWWWWWWWWWWWWWWWWWWW"]
-Levels.append(Floor1)
-
-Floor2 = ["WWWWWWWWWWWWWWWWWWWW",
-          "Wp                 W",
-          "W WWWWWWWWWWWWWWWW W",
-          "W W         W   W  W",
-          "W W WWWWWWW   W W WW",
-          "W W       WWWWW    W",
-          "W WWWWWWW     WWWW W",
-          "W       WWWWW  W W W",
-          "WWW WWW W   WW   W W",
-          "W W W   W W  WWWWW W",
-          "W W W  WW WW     W W",
-          "W W WW W   WWWWW W W",
-          "W W  W W W W   W W W",
-          "W WW W W W   W W W W",
-          "W W  W   WWWWW W W W",
-          "W W WWW WW   W W W W",
-          "W W     W  W   W W W",
-          "W WWWWW WPWWWWWW W W",
-          "W       WLW      WSW",
-          "WWWWWWWWWWWWWWWWWWWW"]
-Levels.append(Floor2)
-
 Floor3 = ["WWWWWWWWWWWWWWWWWWWW",
           "WSW              WLW",
           "W W WWWWWWWWWWWW WPW",
@@ -592,19 +526,6 @@ while running:
     # Bottom text
     pygame.draw.rect(screen, (0, 0, 0), (0, WindowSize, WindowSize, BottomTextSpace))
     if lvl == 0:
-        text5 = ExplainFont.render("Welcome in the MazeGame. To pass this level, find the stairs", True, (255, 255, 255))
-        text5bis = ExplainFont.render("", True, (255, 255, 255))
-    elif lvl == 1:
-        text5 = ExplainFont.render("Welcome in the Level 2. To pass this level, find the stairs", True, (255, 255, 255))
-        text5bis = ExplainFont.render("", True, (255, 255, 255))
-    elif lvl == 2:
-        if Opened:
-            text5 = ExplainFont.render("Now, to pass this level, find the stairs", True, (255, 255, 255))
-            text5bis = ExplainFont.render("", True, (255, 255, 255))
-        else:
-            text5 = ExplainFont.render("Welcome in the Level 3. To pass this level, find the lever,", True, (255, 255, 255))
-            text5bis = ExplainFont.render("and then find the stairs", True, (255, 255, 255))
-    elif lvl == 3:
         if not Opened:
             text5 = ExplainFont.render("Welcome in the Level 4. To pass this level, find the levers,", True, (255, 255, 255))
             text5bis = ExplainFont.render("and then find the stairs", True, (255, 255, 255))
