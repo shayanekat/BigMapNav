@@ -8,7 +8,6 @@ uniquement les allentours du joueur toujours au cente
 """
 
 # TODO (04/10/2020):
-#   - add level with more than one lever
 #   - add level with levers to activate in an exact order
 #   - add level wil lot of lever, but not all necessary to finish level
 #   - add monsters with basical movment, and a way to defeeat them
@@ -42,7 +41,8 @@ player = ""
 Exit = []
 Levels = []
 Lev = []
-LeverLevels = [2, 3]
+LeverLevels = [2, 3, 4]
+Levers = ("L", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0")
 
 
 # fonts
@@ -141,6 +141,28 @@ Floor3 = ["WWWWWWWWWWWWWWWWWWWW",
           "WWWWWWWWWWWWWWWWWWWW"]
 Levels.append(Floor3)
 
+Floor4 = ["WWWWWWWWWWWWWWWWWWWW",
+          "WP W        W   W 2W",
+          "WW W WWWW W W W W WW",
+          "W    W  W W W W W  W",
+          "W WWWW    W W W    W",
+          "W    WWWWWW W WWWWWW",
+          "WWW       W W      W",
+          "WWWWWWWWW W WWWWWW W",
+          "W         W        W",
+          "W WWWWWWWWWWWWWWWW W",
+          "W         W        W",
+          "WWWWWWWWW W WWWWWWWW",
+          "W       W W W      W",
+          "W WWWWW W W W WWWWWW",
+          "W     W W W W W    W",
+          "WWWWW W W W W W W  W",
+          "W     W W W   W W WW",
+          "W WW WW W WWWWW W  W",
+          "W1W  W          WWSW",
+          "WWWWWWWWWWWWWWWWWWWW"]
+Levels.append(Floor4)
+
 
 # images
 walkRight = [pygame.image.load('Images\\R1.png'), pygame.image.load('Images\\R2.png'), pygame.image.load('Images\\R3.png'), pygame.image.load('Images\\R4.png'), pygame.image.load('Images\\R5.png'), pygame.image.load('Images\\R6.png'), pygame.image.load('Images\\R7.png'), pygame.image.load('Images\\R8.png'), pygame.image.load('Images\\R9.png')]
@@ -182,7 +204,7 @@ def render(MapToRender):
             elif MapToRender[j][i] == "S": # S = Sortie
                 Exit = [i, j]
             
-            elif MapToRender[j][i] == "L": # Lever
+            elif MapToRender[j][i] in Levers: # Lever
                 Lev.append([i, j])
 
 
@@ -216,7 +238,7 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL-BlockSize, yUL-BlockSize))
     else:
         screen.blit(background, (xUL-BlockSize, yUL-BlockSize))
-    if [int(PlayerPos[0]-1), int(PlayerPos[1]-1)] == Lev:
+    if [int(PlayerPos[0]-1), int(PlayerPos[1]-1)] in Lev:
         screen.blit(lever, (xUL-BlockSize, yUL-BlockSize))
 
     # up
@@ -226,7 +248,7 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL, yUL-BlockSize))
     else:
         screen.blit(background, (xUL, yUL-BlockSize))
-    if [int(PlayerPos[0]+1), int(PlayerPos[1])] == Lev:
+    if [int(PlayerPos[0]+1), int(PlayerPos[1])] in Lev:
         screen.blit(lever, (xUL, yUL-BlockSize))
 
     # upright
@@ -236,7 +258,7 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL+BlockSize, yUL-BlockSize))
     else:
         screen.blit(background, (xUL+BlockSize, yUL-BlockSize))
-    if [int(PlayerPos[0]+1), int(PlayerPos[1]-1)] == Lev:
+    if [int(PlayerPos[0]+1), int(PlayerPos[1]-1)] in Lev:
         screen.blit(lever, (xUL+BlockSize, yUL-BlockSize))
 
     # right
@@ -246,7 +268,7 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL+BlockSize, yUL))
     else:
         screen.blit(background, (xUL+BlockSize, yUL))
-    if [int(PlayerPos[0]+1), int(PlayerPos[1])] == Lev:
+    if [int(PlayerPos[0]+1), int(PlayerPos[1])] in Lev:
         screen.blit(lever, (xUL+BlockSize, yUL))
 
     # downright
@@ -256,7 +278,7 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL+BlockSize, yUL+BlockSize))
     else:
         screen.blit(background, (xUL+BlockSize, yUL+BlockSize))
-    if [int(PlayerPos[0]+1), int(PlayerPos[1]+1)] == Lev:
+    if [int(PlayerPos[0]+1), int(PlayerPos[1]+1)] in Lev:
         screen.blit(lever, (xUL+BlockSize, yUL+BlockSize))
 
     # down
@@ -266,7 +288,7 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL, yUL+BlockSize))
     else:
         screen.blit(background, (xUL, yUL+BlockSize))
-    if [int(PlayerPos[0]), int(PlayerPos[1]+1)] == Lev:
+    if [int(PlayerPos[0]), int(PlayerPos[1]+1)] in Lev:
         screen.blit(lever, (xUL, yUL+BlockSize))
 
     # downleft
@@ -276,7 +298,7 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL-BlockSize, yUL+BlockSize))
     else:
         screen.blit(background, (xUL-BlockSize, yUL+BlockSize))
-    if [int(PlayerPos[0]-1), int(PlayerPos[1]+1)] == Lev:
+    if [int(PlayerPos[0]-1), int(PlayerPos[1]+1)] in Lev:
         screen.blit(lever, (xUL-BlockSize, yUL+BlockSize))
 
     # left
@@ -286,7 +308,7 @@ def LocalRender(MapToRender):
         screen.blit(stair, (xUL-BlockSize, yUL))
     else:
         screen.blit(background, (xUL-BlockSize, yUL))
-    if [int(PlayerPos[0]-1), int(PlayerPos[1])] == Lev:
+    if [int(PlayerPos[0]-1), int(PlayerPos[1])] in Lev:
         screen.blit(lever, (xUL-BlockSize, yUL))
 
     # middle background
