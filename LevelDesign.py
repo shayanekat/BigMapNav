@@ -29,6 +29,7 @@ PlayerPos = []
 player = ""
 Exit = []
 Lev = []
+Levers = ("L", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0")
 
 # fonts
 pygame.font.init()
@@ -37,24 +38,24 @@ WinFont = pygame.font.SysFont("Times", 20)
 
 # map design
 Floor2 = ["WWWWWWWWWWWWWWWWWWWW",
-          "WSW              WLW",
-          "W W WWWWWWWWWWWW W W",
-          "W W W            W W",
-          "W W W WWWWWWWWWWWW W",
-          "W W W W     W   WW W",
-          "W   W W WWW W W W  W",
-          "WWW W W W   W W W WW",
-          "W   W   W WWW W W  W",
-          "W WWWWWWW WWW W WW W",
-          "W W       W   W    W",
-          "W W WWWWWWWWWWW WWWWW",
-          "W W W   W   W      W",
-          "W W W W W W W WWWW W",
-          "W W   W   W   W    W",
-          "W WWWWWWWWWWWWW WWWW",
-          "W W   W   W   W    W",
-          "W W W W W W W WWWW W",
-          "WL  W   W   W     PW",
+          "WP W        W   W 2W",
+          "WW W WWWW W W W W WW",
+          "W    W  W W W W W  W",
+          "W WWWW    W W W    W",
+          "W    WWWWWW W WWWWWW",
+          "WWW       W W      W",
+          "WWWWWWWWW W WWWWWW W",
+          "W         W        W",
+          "W WWWWWWWWWWWWWWWW W",
+          "W         W        W",
+          "WWWWWWWWW W WWWWWWWW",
+          "W       W W W      W",
+          "W WWWWW W W W WWWWWW",
+          "W     W W W W W    W",
+          "WWWWW W W W W W W  W",
+          "W     W W W   W W WW",
+          "W WW WW W WWWWW W  W",
+          "W1W  W          WWSW",
           "WWWWWWWWWWWWWWWWWWWW"]
 
 
@@ -80,7 +81,7 @@ def render(MapToRender):
                 Exit = [i, j]
                 pygame.draw.rect(screen, (0, 255, 0), (i*BlockSize, j*BlockSize, BlockSize, BlockSize))
             
-            elif MapToRender[j][i] == "L": # Lever
+            elif MapToRender[j][i] in Levers: # Lever
                 Lev = [i, j]
                 pygame.draw.rect(screen, (255, 255, 0), (i*BlockSize, j*BlockSize, BlockSize, BlockSize))
     
